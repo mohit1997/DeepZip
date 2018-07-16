@@ -1,0 +1,172 @@
+Starting training ...
+0;0.015219433896944596
+1;1.720120225694806e-07
+2;1.7198284337856298e-07
+3;1.7198267997920125e-07
+4;1.7198266277773655e-07
+Starting Compression ...
+2018-11-01 12:55:38.879789: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2018-11-01 12:55:41.927069: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1411] Found device 0 with properties: 
+name: TITAN X (Pascal) major: 6 minor: 1 memoryClockRate(GHz): 1.531
+pciBusID: 0000:8a:00.0
+totalMemory: 11.91GiB freeMemory: 11.75GiB
+2018-11-01 12:55:41.927164: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1490] Adding visible gpu devices: 0
+2018-11-01 12:55:42.333434: I tensorflow/core/common_runtime/gpu/gpu_device.cc:971] Device interconnect StreamExecutor with strength 1 edge matrix:
+2018-11-01 12:55:42.333492: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977]      0 
+2018-11-01 12:55:42.333503: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990] 0:   N 
+2018-11-01 12:55:42.333954: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1103] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 11372 MB memory) -> physical GPU (device: 0, name: TITAN X (Pascal), pci bus id: 0000:8a:00.0, compute capability: 6.1)
+/opt/conda/lib/python3.6/site-packages/sklearn/externals/joblib/externals/cloudpickle/cloudpickle.py:47: DeprecationWarning: the imp module is deprecated in favour of importlib; see the module's documentation for alternative uses
+  import imp
+Using TensorFlow backend.
+/opt/conda/lib/python3.6/site-packages/sklearn/preprocessing/_encoders.py:363: FutureWarning: The handling of integer data will change in version 0.22. Currently, the categories are determined based on the range [0, max(values)], while in the future they will be determined based on the unique values.
+If you want the future behaviour and silence this warning, you can specify "categories='auto'".
+In case you used a LabelEncoder before this OneHotEncoder to convert the categories to integers, then you can now use the OneHotEncoder directly.
+  warnings.warn(msg, FutureWarning)
+/src/keras/activations.py:209: UserWarning: Do not pass a layer instance (such as ELU) as the activation argument of another layer. Instead, advanced activation layers should be used just like any other layer in a model.
+  identifier=identifier.__class__.__name__))
+	Command being timed: "python compressor.py -data ../data/processed_files/xor50.npy -data_params ../data/processed_files/xor50.param.json -model ../data/trained_models/xor50/FC_4layer.hdf5 -model_name FC_4layer -output ../data/compressed/xor50/FC_4layer.compressed -batch_size 10000"
+	User time (seconds): 79.79
+	System time (seconds): 7.29
+	Percent of CPU this job got: 114%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:15.96
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1650624
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 1153631
+	Voluntary context switches: 23025
+	Involuntary context switches: 350
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 80224
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+2018-11-01 12:56:52.018254: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2018-11-01 12:56:55.083378: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1411] Found device 0 with properties: 
+name: TITAN X (Pascal) major: 6 minor: 1 memoryClockRate(GHz): 1.531
+pciBusID: 0000:8a:00.0
+totalMemory: 11.91GiB freeMemory: 11.75GiB
+2018-11-01 12:56:55.083441: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1490] Adding visible gpu devices: 0
+2018-11-01 12:56:55.413981: I tensorflow/core/common_runtime/gpu/gpu_device.cc:971] Device interconnect StreamExecutor with strength 1 edge matrix:
+2018-11-01 12:56:55.414047: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977]      0 
+2018-11-01 12:56:55.414056: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990] 0:   N 
+2018-11-01 12:56:55.414445: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1103] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 11372 MB memory) -> physical GPU (device: 0, name: TITAN X (Pascal), pci bus id: 0000:8a:00.0, compute capability: 6.1)
+/opt/conda/lib/python3.6/site-packages/sklearn/externals/joblib/externals/cloudpickle/cloudpickle.py:47: DeprecationWarning: the imp module is deprecated in favour of importlib; see the module's documentation for alternative uses
+  import imp
+Using TensorFlow backend.
+/src/keras/activations.py:209: UserWarning: Do not pass a layer instance (such as ELU) as the activation argument of another layer. Instead, advanced activation layers should be used just like any other layer in a model.
+  identifier=identifier.__class__.__name__))
+{'0': 'a', '1': 'b'}
+[0 0 1 1 0 1 0 0 1 0]
+	Command being timed: "python decompressor.py -output ../data/compressed/xor50/FC_4layer.reconstructed.txt -model ../data/trained_models/xor50/FC_4layer.hdf5 -model_name FC_4layer -input_file_prefix ../data/compressed/xor50/FC_4layer.compressed -batch_size 10000"
+	User time (seconds): 106.71
+	System time (seconds): 5.50
+	Percent of CPU this job got: 103%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:48.27
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1482480
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 477855
+	Voluntary context switches: 24856
+	Involuntary context switches: 362
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 99552
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+Starting Compression ...
+2018-11-09 14:02:21.494415: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2018-11-09 14:02:24.694816: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1411] Found device 0 with properties: 
+name: TITAN X (Pascal) major: 6 minor: 1 memoryClockRate(GHz): 1.531
+pciBusID: 0000:8a:00.0
+totalMemory: 11.91GiB freeMemory: 11.75GiB
+2018-11-09 14:02:24.694875: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1490] Adding visible gpu devices: 0
+2018-11-09 14:02:25.012782: I tensorflow/core/common_runtime/gpu/gpu_device.cc:971] Device interconnect StreamExecutor with strength 1 edge matrix:
+2018-11-09 14:02:25.012852: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977]      0 
+2018-11-09 14:02:25.012862: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990] 0:   N 
+2018-11-09 14:02:25.013302: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1103] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 11372 MB memory) -> physical GPU (device: 0, name: TITAN X (Pascal), pci bus id: 0000:8a:00.0, compute capability: 6.1)
+/opt/conda/lib/python3.6/site-packages/sklearn/externals/joblib/externals/cloudpickle/cloudpickle.py:47: DeprecationWarning: the imp module is deprecated in favour of importlib; see the module's documentation for alternative uses
+  import imp
+Using TensorFlow backend.
+/opt/conda/lib/python3.6/site-packages/sklearn/preprocessing/_encoders.py:363: FutureWarning: The handling of integer data will change in version 0.22. Currently, the categories are determined based on the range [0, max(values)], while in the future they will be determined based on the unique values.
+If you want the future behaviour and silence this warning, you can specify "categories='auto'".
+In case you used a LabelEncoder before this OneHotEncoder to convert the categories to integers, then you can now use the OneHotEncoder directly.
+  warnings.warn(msg, FutureWarning)
+/src/keras/activations.py:209: UserWarning: Do not pass a layer instance (such as ELU) as the activation argument of another layer. Instead, advanced activation layers should be used just like any other layer in a model.
+  identifier=identifier.__class__.__name__))
+	Command being timed: "python compressor.py -data ../data/processed_files/xor50.npy -data_params ../data/processed_files/xor50.param.json -model ../data/trained_models/xor50/FC_4layer.hdf5 -model_name FC_4layer -output ../data/compressed/xor50/FC_4layer.compressed -batch_size 1000"
+	User time (seconds): 86.13
+	System time (seconds): 8.67
+	Percent of CPU this job got: 125%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:15.31
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1584384
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 1051884
+	Voluntary context switches: 150374
+	Involuntary context switches: 292
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8048
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+2018-11-09 14:03:33.885556: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2018-11-09 14:03:37.079340: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1411] Found device 0 with properties: 
+name: TITAN X (Pascal) major: 6 minor: 1 memoryClockRate(GHz): 1.531
+pciBusID: 0000:8a:00.0
+totalMemory: 11.91GiB freeMemory: 11.75GiB
+2018-11-09 14:03:37.079382: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1490] Adding visible gpu devices: 0
+2018-11-09 14:03:37.394218: I tensorflow/core/common_runtime/gpu/gpu_device.cc:971] Device interconnect StreamExecutor with strength 1 edge matrix:
+2018-11-09 14:03:37.394287: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977]      0 
+2018-11-09 14:03:37.394296: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990] 0:   N 
+2018-11-09 14:03:37.394730: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1103] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 11372 MB memory) -> physical GPU (device: 0, name: TITAN X (Pascal), pci bus id: 0000:8a:00.0, compute capability: 6.1)
+/opt/conda/lib/python3.6/site-packages/sklearn/externals/joblib/externals/cloudpickle/cloudpickle.py:47: DeprecationWarning: the imp module is deprecated in favour of importlib; see the module's documentation for alternative uses
+  import imp
+Using TensorFlow backend.
+/src/keras/activations.py:209: UserWarning: Do not pass a layer instance (such as ELU) as the activation argument of another layer. Instead, advanced activation layers should be used just like any other layer in a model.
+  identifier=identifier.__class__.__name__))
+{'0': 'a', '1': 'b'}
+[0 0 1 1 0 1 0 0 1 0]
+	Command being timed: "python decompressor.py -output ../data/compressed/xor50/FC_4layer.reconstructed.txt -model ../data/trained_models/xor50/FC_4layer.hdf5 -model_name FC_4layer -input_file_prefix ../data/compressed/xor50/FC_4layer.compressed -batch_size 1000"
+	User time (seconds): 116.94
+	System time (seconds): 6.49
+	Percent of CPU this job got: 110%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:51.61
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1465732
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 368869
+	Voluntary context switches: 151487
+	Involuntary context switches: 332
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 27552
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

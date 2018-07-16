@@ -1,0 +1,89 @@
+Starting training ...
+0;2.330049675131431
+1;2.2059011771661776
+2;2.1841704408551994
+3;2.176580099171178
+4;2.1720419460083686
+5;2.169499499197213
+6;2.168445724686608
+7;2.1681314912169145
+8;2.1690361785838683
+Starting Compression ...
+2018-11-09 20:26:31.898582: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2018-11-09 20:26:35.406816: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1411] Found device 0 with properties: 
+name: TITAN X (Pascal) major: 6 minor: 1 memoryClockRate(GHz): 1.531
+pciBusID: 0000:09:00.0
+totalMemory: 11.91GiB freeMemory: 11.75GiB
+2018-11-09 20:26:35.406858: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1490] Adding visible gpu devices: 0
+2018-11-09 20:26:35.723908: I tensorflow/core/common_runtime/gpu/gpu_device.cc:971] Device interconnect StreamExecutor with strength 1 edge matrix:
+2018-11-09 20:26:35.723977: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977]      0 
+2018-11-09 20:26:35.723987: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990] 0:   N 
+2018-11-09 20:26:35.724360: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1103] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 11372 MB memory) -> physical GPU (device: 0, name: TITAN X (Pascal), pci bus id: 0000:09:00.0, compute capability: 6.1)
+/opt/conda/lib/python3.6/site-packages/sklearn/externals/joblib/externals/cloudpickle/cloudpickle.py:47: DeprecationWarning: the imp module is deprecated in favour of importlib; see the module's documentation for alternative uses
+  import imp
+Using TensorFlow backend.
+/opt/conda/lib/python3.6/site-packages/sklearn/preprocessing/_encoders.py:363: FutureWarning: The handling of integer data will change in version 0.22. Currently, the categories are determined based on the range [0, max(values)], while in the future they will be determined based on the unique values.
+If you want the future behaviour and silence this warning, you can specify "categories='auto'".
+In case you used a LabelEncoder before this OneHotEncoder to convert the categories to integers, then you can now use the OneHotEncoder directly.
+  warnings.warn(msg, FutureWarning)
+	Command being timed: "python compressor.py -data ../data/processed_files/text8.npy -data_params ../data/processed_files/text8.param.json -model ../data/trained_models/text8/LSTM_multi_bn.hdf5 -model_name LSTM_multi_bn -output ../data/compressed/text8/LSTM_multi_bn.compressed -batch_size 10000"
+	User time (seconds): 1428.38
+	System time (seconds): 135.27
+	Percent of CPU this job got: 103%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 25:04.97
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 27305408
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 31161493
+	Voluntary context switches: 3264982
+	Involuntary context switches: 3010
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 133128
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+2018-11-09 20:50:40.320176: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2018-11-09 20:50:43.832767: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1411] Found device 0 with properties: 
+name: TITAN X (Pascal) major: 6 minor: 1 memoryClockRate(GHz): 1.531
+pciBusID: 0000:09:00.0
+totalMemory: 11.91GiB freeMemory: 11.75GiB
+2018-11-09 20:50:43.832808: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1490] Adding visible gpu devices: 0
+2018-11-09 20:50:44.141111: I tensorflow/core/common_runtime/gpu/gpu_device.cc:971] Device interconnect StreamExecutor with strength 1 edge matrix:
+2018-11-09 20:50:44.141167: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977]      0 
+2018-11-09 20:50:44.141176: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990] 0:   N 
+2018-11-09 20:50:44.141567: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1103] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 11372 MB memory) -> physical GPU (device: 0, name: TITAN X (Pascal), pci bus id: 0000:09:00.0, compute capability: 6.1)
+/opt/conda/lib/python3.6/site-packages/sklearn/externals/joblib/externals/cloudpickle/cloudpickle.py:47: DeprecationWarning: the imp module is deprecated in favour of importlib; see the module's documentation for alternative uses
+  import imp
+Using TensorFlow backend.
+{'0': ' ', '1': 'a', '2': 'c', '3': 'b', '4': 'e', '5': 'd', '6': 'g', '7': 'f', '8': 'i', '9': 'h', '10': 'k', '11': 'j', '12': 'm', '13': 'l', '14': 'o', '15': 'n', '16': 'q', '17': 'p', '18': 's', '19': 'r', '20': 'u', '21': 't', '22': 'w', '23': 'v', '24': 'y', '25': 'x', '26': 'z'}
+[ 0  1 15  1 19  2  9  8 18 12]
+	Command being timed: "python decompressor.py -output ../data/compressed/text8/LSTM_multi_bn.reconstructed.txt -model ../data/trained_models/text8/LSTM_multi_bn.hdf5 -model_name LSTM_multi_bn -input_file_prefix ../data/compressed/text8/LSTM_multi_bn.compressed -batch_size 10000"
+	User time (seconds): 2496.67
+	System time (seconds): 96.17
+	Percent of CPU this job got: 101%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 42:22.40
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 3072776
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 2511796
+	Voluntary context switches: 3234573
+	Involuntary context switches: 4433
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 275376
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

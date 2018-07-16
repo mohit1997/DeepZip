@@ -1,0 +1,9 @@
+data/files_to_be_compressed/*
+data/files_to_be_compressed_test/*
+data/processed_files/*
+data/processed_files_test/*
+data/processed_files_test2/*
+data/processed_files_new/*
+data/fasta_files/*
+data/compressed/*
+

@@ -1,0 +1,380 @@
+Starting training ...
+Starting Compression ...
+/opt/conda/lib/python3.6/site-packages/sklearn/externals/joblib/externals/cloudpickle/cloudpickle.py:47: DeprecationWarning: the imp module is deprecated in favour of importlib; see the module's documentation for alternative uses
+  import imp
+Using TensorFlow backend.
+/opt/conda/lib/python3.6/site-packages/sklearn/preprocessing/_encoders.py:363: FutureWarning: The handling of integer data will change in version 0.22. Currently, the categories are determined based on the range [0, max(values)], while in the future they will be determined based on the unique values.
+If you want the future behaviour and silence this warning, you can specify "categories='auto'".
+In case you used a LabelEncoder before this OneHotEncoder to convert the categories to integers, then you can now use the OneHotEncoder directly.
+  warnings.warn(msg, FutureWarning)
+Traceback (most recent call last):
+  File "compressor.py", line 202, in <module>
+    main()
+  File "compressor.py", line 164, in main
+    predict_lstm(X, Y, Y_original, timesteps, batch_size, alphabet_size, args.model_name)
+  File "compressor.py", line 68, in predict_lstm
+    model = getattr(models, model_name)(bs, timesteps, alphabet_size)
+AttributeError: module 'models' has no attribute 'FC'
+Command exited with non-zero status 1
+	Command being timed: "python compressor.py -data ../data/processed_files/Caenorhabditis_elegans.WBcel235.dna.chromosome.I.npy -data_params ../data/processed_files/Caenorhabditis_elegans.WBcel235.dna.chromosome.I.param.json -model ../data/trained_models/Caenorhabditis_elegans.WBcel235.dna.chromosome.I/FC.hdf5 -model_name FC -output ../data/compressed/Caenorhabditis_elegans.WBcel235.dna.chromosome.I/FC.compressed -batch_size 10000"
+	User time (seconds): 14.54
+	System time (seconds): 3.43
+	Percent of CPU this job got: 245%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:07.33
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1635784
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 1353189
+	Voluntary context switches: 328
+	Involuntary context switches: 75208
+	Swaps: 0
+	File system inputs: 8
+	File system outputs: 16
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+/opt/conda/lib/python3.6/site-packages/sklearn/externals/joblib/externals/cloudpickle/cloudpickle.py:47: DeprecationWarning: the imp module is deprecated in favour of importlib; see the module's documentation for alternative uses
+  import imp
+Using TensorFlow backend.
+Traceback (most recent call last):
+  File "decompressor.py", line 184, in <module>
+    main()
+  File "decompressor.py", line 153, in main
+    f = open(args.input_file_prefix+'.combined','rb')
+FileNotFoundError: [Errno 2] No such file or directory: '../data/compressed/Caenorhabditis_elegans.WBcel235.dna.chromosome.I/FC.compressed.combined'
+Command exited with non-zero status 1
+	Command being timed: "python decompressor.py -output ../data/compressed/Caenorhabditis_elegans.WBcel235.dna.chromosome.I/FC.reconstructed.txt -model ../data/trained_models/Caenorhabditis_elegans.WBcel235.dna.chromosome.I/FC.hdf5 -model_name FC -input_file_prefix ../data/compressed/Caenorhabditis_elegans.WBcel235.dna.chromosome.I/FC.compressed -batch_size 10000"
+	User time (seconds): 2.04
+	System time (seconds): 0.22
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:02.27
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 254936
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 68187
+	Voluntary context switches: 30
+	Involuntary context switches: 6
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+Starting training ...
+Starting Compression ...
+Starting training ...
+Starting Compression ...
+Starting training ...
+Starting Compression ...
+/opt/conda/lib/python3.6/site-packages/sklearn/externals/joblib/externals/cloudpickle/cloudpickle.py:47: DeprecationWarning: the imp module is deprecated in favour of importlib; see the module's documentation for alternative uses
+  import imp
+Using TensorFlow backend.
+/opt/conda/lib/python3.6/site-packages/sklearn/preprocessing/_encoders.py:363: FutureWarning: The handling of integer data will change in version 0.22. Currently, the categories are determined based on the range [0, max(values)], while in the future they will be determined based on the unique values.
+If you want the future behaviour and silence this warning, you can specify "categories='auto'".
+In case you used a LabelEncoder before this OneHotEncoder to convert the categories to integers, then you can now use the OneHotEncoder directly.
+  warnings.warn(msg, FutureWarning)
+Traceback (most recent call last):
+  File "compressor.py", line 202, in <module>
+    main()
+  File "compressor.py", line 164, in main
+    predict_lstm(X, Y, Y_original, timesteps, batch_size, alphabet_size, args.model_name)
+  File "compressor.py", line 68, in predict_lstm
+    model = getattr(models, model_name)(bs, timesteps, alphabet_size)
+  File "/data/final_models/models.py", line 165, in FC
+    model = sequential()
+NameError: name 'sequential' is not defined
+Command exited with non-zero status 1
+	Command being timed: "python compressor.py -data ../data/processed_files/Caenorhabditis_elegans.WBcel235.dna.chromosome.I.npy -data_params ../data/processed_files/Caenorhabditis_elegans.WBcel235.dna.chromosome.I.param.json -model ../data/trained_models/Caenorhabditis_elegans.WBcel235.dna.chromosome.I/FC.hdf5 -model_name FC -output ../data/compressed/Caenorhabditis_elegans.WBcel235.dna.chromosome.I/FC.compressed -batch_size 10000"
+	User time (seconds): 16.01
+	System time (seconds): 3.53
+	Percent of CPU this job got: 250%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:07.81
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1636196
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 1318825
+	Voluntary context switches: 265
+	Involuntary context switches: 120
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 16
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+/opt/conda/lib/python3.6/site-packages/sklearn/externals/joblib/externals/cloudpickle/cloudpickle.py:47: DeprecationWarning: the imp module is deprecated in favour of importlib; see the module's documentation for alternative uses
+  import imp
+Using TensorFlow backend.
+Traceback (most recent call last):
+  File "decompressor.py", line 184, in <module>
+    main()
+  File "decompressor.py", line 153, in main
+    f = open(args.input_file_prefix+'.combined','rb')
+FileNotFoundError: [Errno 2] No such file or directory: '../data/compressed/Caenorhabditis_elegans.WBcel235.dna.chromosome.I/FC.compressed.combined'
+Command exited with non-zero status 1
+	Command being timed: "python decompressor.py -output ../data/compressed/Caenorhabditis_elegans.WBcel235.dna.chromosome.I/FC.reconstructed.txt -model ../data/trained_models/Caenorhabditis_elegans.WBcel235.dna.chromosome.I/FC.hdf5 -model_name FC -input_file_prefix ../data/compressed/Caenorhabditis_elegans.WBcel235.dna.chromosome.I/FC.compressed -batch_size 10000"
+	User time (seconds): 2.08
+	System time (seconds): 0.27
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:02.35
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 254404
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 68217
+	Voluntary context switches: 27
+	Involuntary context switches: 11
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+Starting training ...
+Starting Compression ...
+Starting training ...
+0;1.8376746547150056
+1;1.8126217554959843
+2;1.8025803795099922
+3;1.7963058942928531
+4;1.7918460764422657
+5;1.7884065360185188
+6;1.7856453744295588
+7;1.7833271550050174
+8;1.7813949754473162
+9;1.7797232625827701
+Starting Compression ...
+2018-11-01 01:34:51.846369: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2018-11-01 01:34:54.512297: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1411] Found device 0 with properties: 
+name: TITAN X (Pascal) major: 6 minor: 1 memoryClockRate(GHz): 1.531
+pciBusID: 0000:08:00.0
+totalMemory: 11.91GiB freeMemory: 11.75GiB
+2018-11-01 01:34:54.512359: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1490] Adding visible gpu devices: 0
+2018-11-01 01:34:54.866874: I tensorflow/core/common_runtime/gpu/gpu_device.cc:971] Device interconnect StreamExecutor with strength 1 edge matrix:
+2018-11-01 01:34:54.866941: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977]      0 
+2018-11-01 01:34:54.866951: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990] 0:   N 
+2018-11-01 01:34:54.867324: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1103] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 11372 MB memory) -> physical GPU (device: 0, name: TITAN X (Pascal), pci bus id: 0000:08:00.0, compute capability: 6.1)
+/opt/conda/lib/python3.6/site-packages/sklearn/externals/joblib/externals/cloudpickle/cloudpickle.py:47: DeprecationWarning: the imp module is deprecated in favour of importlib; see the module's documentation for alternative uses
+  import imp
+Using TensorFlow backend.
+/opt/conda/lib/python3.6/site-packages/sklearn/preprocessing/_encoders.py:363: FutureWarning: The handling of integer data will change in version 0.22. Currently, the categories are determined based on the range [0, max(values)], while in the future they will be determined based on the unique values.
+If you want the future behaviour and silence this warning, you can specify "categories='auto'".
+In case you used a LabelEncoder before this OneHotEncoder to convert the categories to integers, then you can now use the OneHotEncoder directly.
+  warnings.warn(msg, FutureWarning)
+	Command being timed: "python compressor.py -data ../data/processed_files/Caenorhabditis_elegans.WBcel235.dna.chromosome.I.npy -data_params ../data/processed_files/Caenorhabditis_elegans.WBcel235.dna.chromosome.I.param.json -model ../data/trained_models/Caenorhabditis_elegans.WBcel235.dna.chromosome.I/FC.hdf5 -model_name FC -output ../data/compressed/Caenorhabditis_elegans.WBcel235.dna.chromosome.I/FC.compressed -batch_size 10000"
+	User time (seconds): 224.19
+	System time (seconds): 12.13
+	Percent of CPU this job got: 106%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 3:41.15
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 2011108
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 1939866
+	Voluntary context switches: 180548
+	Involuntary context switches: 683
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 86624
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+2018-11-01 01:38:28.361670: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2018-11-01 01:38:31.008045: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1411] Found device 0 with properties: 
+name: TITAN X (Pascal) major: 6 minor: 1 memoryClockRate(GHz): 1.531
+pciBusID: 0000:08:00.0
+totalMemory: 11.91GiB freeMemory: 11.75GiB
+2018-11-01 01:38:31.008109: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1490] Adding visible gpu devices: 0
+2018-11-01 01:38:31.402802: I tensorflow/core/common_runtime/gpu/gpu_device.cc:971] Device interconnect StreamExecutor with strength 1 edge matrix:
+2018-11-01 01:38:31.402867: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977]      0 
+2018-11-01 01:38:31.402877: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990] 0:   N 
+2018-11-01 01:38:31.403322: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1103] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 11372 MB memory) -> physical GPU (device: 0, name: TITAN X (Pascal), pci bus id: 0000:08:00.0, compute capability: 6.1)
+/opt/conda/lib/python3.6/site-packages/sklearn/externals/joblib/externals/cloudpickle/cloudpickle.py:47: DeprecationWarning: the imp module is deprecated in favour of importlib; see the module's documentation for alternative uses
+  import imp
+Using TensorFlow backend.
+{'0': 'A', '1': 'C', '2': 'T', '3': 'G'}
+[3 1 1 2 0 0 3 1 1 2]
+	Command being timed: "python decompressor.py -output ../data/compressed/Caenorhabditis_elegans.WBcel235.dna.chromosome.I/FC.reconstructed.txt -model ../data/trained_models/Caenorhabditis_elegans.WBcel235.dna.chromosome.I/FC.hdf5 -model_name FC -input_file_prefix ../data/compressed/Caenorhabditis_elegans.WBcel235.dna.chromosome.I/FC.compressed -batch_size 10000"
+	User time (seconds): 313.08
+	System time (seconds): 9.34
+	Percent of CPU this job got: 102%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 5:15.09
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1543840
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 572505
+	Voluntary context switches: 182230
+	Involuntary context switches: 922
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 109456
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+Starting Compression ...
+2018-11-09 09:06:34.569145: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2018-11-09 09:06:37.371351: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1411] Found device 0 with properties: 
+name: TITAN X (Pascal) major: 6 minor: 1 memoryClockRate(GHz): 1.531
+pciBusID: 0000:09:00.0
+totalMemory: 11.91GiB freeMemory: 286.06MiB
+2018-11-09 09:06:37.371397: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1490] Adding visible gpu devices: 0
+2018-11-09 09:06:37.733654: I tensorflow/core/common_runtime/gpu/gpu_device.cc:971] Device interconnect StreamExecutor with strength 1 edge matrix:
+2018-11-09 09:06:37.733726: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977]      0 
+2018-11-09 09:06:37.733735: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990] 0:   N 
+2018-11-09 09:06:37.733949: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1103] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 220 MB memory) -> physical GPU (device: 0, name: TITAN X (Pascal), pci bus id: 0000:09:00.0, compute capability: 6.1)
+2018-11-09 09:06:37.735293: E tensorflow/stream_executor/cuda/cuda_driver.cc:806] failed to allocate 220.06M (230752256 bytes) from device: CUDA_ERROR_OUT_OF_MEMORY: out of memory
+2018-11-09 09:06:38.744308: E tensorflow/stream_executor/cuda/cuda_blas.cc:464] failed to create cublas handle: CUBLAS_STATUS_NOT_INITIALIZED
+2018-11-09 09:06:38.752810: E tensorflow/stream_executor/cuda/cuda_blas.cc:464] failed to create cublas handle: CUBLAS_STATUS_NOT_INITIALIZED
+2018-11-09 09:06:38.755559: E tensorflow/stream_executor/cuda/cuda_blas.cc:464] failed to create cublas handle: CUBLAS_STATUS_NOT_INITIALIZED
+2018-11-09 09:06:38.765426: E tensorflow/stream_executor/cuda/cuda_blas.cc:464] failed to create cublas handle: CUBLAS_STATUS_NOT_INITIALIZED
+2018-11-09 09:06:38.765506: W tensorflow/stream_executor/stream.cc:2089] attempting to perform BLAS operation using StreamExecutor without BLAS support
+/opt/conda/lib/python3.6/site-packages/sklearn/externals/joblib/externals/cloudpickle/cloudpickle.py:47: DeprecationWarning: the imp module is deprecated in favour of importlib; see the module's documentation for alternative uses
+  import imp
+Using TensorFlow backend.
+/opt/conda/lib/python3.6/site-packages/sklearn/preprocessing/_encoders.py:363: FutureWarning: The handling of integer data will change in version 0.22. Currently, the categories are determined based on the range [0, max(values)], while in the future they will be determined based on the unique values.
+If you want the future behaviour and silence this warning, you can specify "categories='auto'".
+In case you used a LabelEncoder before this OneHotEncoder to convert the categories to integers, then you can now use the OneHotEncoder directly.
+  warnings.warn(msg, FutureWarning)
+Traceback (most recent call last):
+  File "compressor.py", line 202, in <module>
+    main()
+  File "compressor.py", line 164, in main
+    predict_lstm(X, Y, Y_original, timesteps, batch_size, alphabet_size, args.model_name)
+  File "compressor.py", line 88, in predict_lstm
+    prob = model.predict(X[ind,:], batch_size=bs)
+  File "/src/keras/engine/training.py", line 1169, in predict
+    steps=steps)
+  File "/src/keras/engine/training_arrays.py", line 295, in predict_loop
+    batch_outs = f(ins_batch)
+  File "/src/keras/backend/tensorflow_backend.py", line 2777, in __call__
+    return self._call(inputs)
+  File "/src/keras/backend/tensorflow_backend.py", line 2737, in _call
+    fetched = self._callable_fn(*array_vals)
+  File "/opt/conda/lib/python3.6/site-packages/tensorflow/python/client/session.py", line 1399, in __call__
+    run_metadata_ptr)
+  File "/opt/conda/lib/python3.6/site-packages/tensorflow/python/framework/errors_impl.py", line 526, in __exit__
+    c_api.TF_GetCode(self.status.status))
+tensorflow.python.framework.errors_impl.InternalError: Blas GEMM launch failed : a.shape=(1000, 2048), b.shape=(2048, 1024), m=1000, n=1024, k=2048
+	 [[{{node dense_1/MatMul}} = MatMul[T=DT_FLOAT, transpose_a=false, transpose_b=false, _device="/job:localhost/replica:0/task:0/device:GPU:0"](flatten_1/Reshape, dense_1/kernel/read)]]
+Command exited with non-zero status 1
+	Command being timed: "python compressor.py -data ../data/processed_files/Caenorhabditis_elegans.WBcel235.dna.chromosome.I.npy -data_params ../data/processed_files/Caenorhabditis_elegans.WBcel235.dna.chromosome.I.param.json -model ../data/trained_models/Caenorhabditis_elegans.WBcel235.dna.chromosome.I/FC.hdf5 -model_name FC -output ../data/compressed/Caenorhabditis_elegans.WBcel235.dna.chromosome.I/FC.compressed -batch_size 1000"
+	User time (seconds): 16.59
+	System time (seconds): 6.02
+	Percent of CPU this job got: 198%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:11.39
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1636784
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 1486805
+	Voluntary context switches: 1035
+	Involuntary context switches: 179
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8016
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+2018-11-09 09:06:41.275659: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2018-11-09 09:06:44.238674: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1411] Found device 0 with properties: 
+name: TITAN X (Pascal) major: 6 minor: 1 memoryClockRate(GHz): 1.531
+pciBusID: 0000:09:00.0
+totalMemory: 11.91GiB freeMemory: 286.06MiB
+2018-11-09 09:06:44.238724: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1490] Adding visible gpu devices: 0
+2018-11-09 09:06:44.593597: I tensorflow/core/common_runtime/gpu/gpu_device.cc:971] Device interconnect StreamExecutor with strength 1 edge matrix:
+2018-11-09 09:06:44.593671: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977]      0 
+2018-11-09 09:06:44.593687: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990] 0:   N 
+2018-11-09 09:06:44.593940: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1103] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 220 MB memory) -> physical GPU (device: 0, name: TITAN X (Pascal), pci bus id: 0000:09:00.0, compute capability: 6.1)
+2018-11-09 09:06:44.595983: E tensorflow/stream_executor/cuda/cuda_driver.cc:806] failed to allocate 220.06M (230752256 bytes) from device: CUDA_ERROR_OUT_OF_MEMORY: out of memory
+2018-11-09 09:06:46.260873: E tensorflow/stream_executor/cuda/cuda_blas.cc:464] failed to create cublas handle: CUBLAS_STATUS_NOT_INITIALIZED
+2018-11-09 09:06:46.269017: E tensorflow/stream_executor/cuda/cuda_blas.cc:464] failed to create cublas handle: CUBLAS_STATUS_NOT_INITIALIZED
+2018-11-09 09:06:46.277403: E tensorflow/stream_executor/cuda/cuda_blas.cc:464] failed to create cublas handle: CUBLAS_STATUS_NOT_INITIALIZED
+2018-11-09 09:06:46.286276: E tensorflow/stream_executor/cuda/cuda_blas.cc:464] failed to create cublas handle: CUBLAS_STATUS_NOT_INITIALIZED
+2018-11-09 09:06:46.286324: W tensorflow/stream_executor/stream.cc:2089] attempting to perform BLAS operation using StreamExecutor without BLAS support
+/opt/conda/lib/python3.6/site-packages/sklearn/externals/joblib/externals/cloudpickle/cloudpickle.py:47: DeprecationWarning: the imp module is deprecated in favour of importlib; see the module's documentation for alternative uses
+  import imp
+Using TensorFlow backend.
+Traceback (most recent call last):
+  File "decompressor.py", line 184, in <module>
+    main()
+  File "decompressor.py", line 172, in main
+    series[:l] = predict_lstm(l, timesteps, batch_size, alphabet_size, args.model_name)
+  File "decompressor.py", line 95, in predict_lstm
+    prob = model.predict(series_2d[:,j:j+timesteps], batch_size=bs)
+  File "/src/keras/engine/training.py", line 1169, in predict
+    steps=steps)
+  File "/src/keras/engine/training_arrays.py", line 295, in predict_loop
+    batch_outs = f(ins_batch)
+  File "/src/keras/backend/tensorflow_backend.py", line 2777, in __call__
+    return self._call(inputs)
+  File "/src/keras/backend/tensorflow_backend.py", line 2737, in _call
+    fetched = self._callable_fn(*array_vals)
+  File "/opt/conda/lib/python3.6/site-packages/tensorflow/python/client/session.py", line 1399, in __call__
+    run_metadata_ptr)
+  File "/opt/conda/lib/python3.6/site-packages/tensorflow/python/framework/errors_impl.py", line 526, in __exit__
+    c_api.TF_GetCode(self.status.status))
+tensorflow.python.framework.errors_impl.InternalError: Blas GEMM launch failed : a.shape=(1000, 2048), b.shape=(2048, 1024), m=1000, n=1024, k=2048
+	 [[{{node dense_1/MatMul}} = MatMul[T=DT_FLOAT, transpose_a=false, transpose_b=false, _device="/job:localhost/replica:0/task:0/device:GPU:0"](flatten_1/Reshape, dense_1/kernel/read)]]
+	 [[{{node dense_3/Softmax/_45}} = _Recv[client_terminated=false, recv_device="/job:localhost/replica:0/task:0/device:CPU:0", send_device="/job:localhost/replica:0/task:0/device:GPU:0", send_device_incarnation=1, tensor_name="edge_42_dense_3/Softmax", tensor_type=DT_FLOAT, _device="/job:localhost/replica:0/task:0/device:CPU:0"]()]]
+Command exited with non-zero status 1
+	Command being timed: "python decompressor.py -output ../data/compressed/Caenorhabditis_elegans.WBcel235.dna.chromosome.I/FC.reconstructed.txt -model ../data/trained_models/Caenorhabditis_elegans.WBcel235.dna.chromosome.I/FC.hdf5 -model_name FC -input_file_prefix ../data/compressed/Caenorhabditis_elegans.WBcel235.dna.chromosome.I/FC.compressed -batch_size 1000"
+	User time (seconds): 3.77
+	System time (seconds): 3.03
+	Percent of CPU this job got: 90%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:07.52
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 951672
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 217572
+	Voluntary context switches: 768
+	Involuntary context switches: 72
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8016
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
