@@ -53,7 +53,7 @@ def fit_lstm(X, Y, batch_size, nb_epoch, neurons):
 	return model
  
 
-series = create_data(10000)
+series = np.load('markov_seq.npy')
 
 series = series[0:10000]
 series = series.reshape(-1, 1)
@@ -63,11 +63,12 @@ onehot_encoded = onehot_encoder.fit(series)
 
 series = series.reshape(-1)
 
-data = strided_app(series, 20, 1)
+data = strided_app(series, 21, 1)
 data = data[:9980] ##selecting ony 9980 points (divisible by batch_size)
 
-X = data
-Y = np.logical_xor(data[:, 0:1], data[:, 10:11])*1.0
+X = data[:, :-1]
+# Y = np.logical_xor(data[:, 0:1], data[:, 10:11])*1.0
+Y = data[:, -1:]
 Y = onehot_encoder.transform(Y)
 
 
