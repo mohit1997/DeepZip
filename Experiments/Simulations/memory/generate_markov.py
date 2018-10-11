@@ -4,7 +4,7 @@ def generate_markov(seq_length):
 	a = np.random.choice(2, 20)
 	l = list(a)
 	for _ in range(seq_length-20):
-		l.append(np.logical_xor(l[-1], l[-20]))
+		l.append(np.logical_xor(l[-10], l[-5]))
 
 	a = np.array(l)
 	np.save('markov_seq', a)
