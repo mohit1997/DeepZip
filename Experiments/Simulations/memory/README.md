@@ -8,8 +8,10 @@
 5. [bilstm.py](bilstm.py) uses a bidirectional single-output LSTM for predicition
 6. [lstm_multiout.py](lstm_multiout.py) uses a bidirectional multi-output output LSTM for predicition.
 
-Note: Change which data is used in the any of the above code before using by changing series=np.load("Name of the File")
-
+Note: Change which data is used in the any of the above code before using by changing:
+```python
+series=np.load("Name of the File")
+```
 ## Requirements
 1. python 2/3
 2. numpy
