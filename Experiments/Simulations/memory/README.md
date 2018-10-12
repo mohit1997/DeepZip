@@ -1,7 +1,7 @@
 # DNA_Compression
 
 ## LSTM usage
-1. To generate markovian data, use generate_markov.py
+1. To generate markovian data, use [generate_markov.py](generate_markov.py)
 2. [short.npy](short.npy) and [short_hg18.npy](short_hg18.npy) are genomic sequences belonging to human chormosome 1.
 3. [lstm.py](lstm.py) uses a single-output LSTM for predicition
 4. [lstm_multiout.py](lstm_multiout.py) uses a multi-output output LSTM for predicition.
