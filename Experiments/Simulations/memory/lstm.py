@@ -33,29 +33,31 @@ def create_data(rows, p=0.5):
 	return data
  
 # fit an LSTM network to training data
-def fit_lstm(X, Y, batch_size, nb_epoch, neurons):
+def fit_lstm(X, Y, bs, nb_epoch, neurons):
 	y = Y
 
 	model = Sequential()
-	model.add(Embedding(2, 8, input_length=X.shape[1]))
-	model.add(LSTM(64, batch_input_shape=(batch_size, X.shape[1], 8), stateful=False, return_sequences=False))
+	model.add(Embedding(y.shape[1], 32, batch_input_shape=(bs, X.shape[1])))
+	model.add(LSTM(64, batch_input_shape=(bs, X.shape[1], 8), stateful=False, return_sequences=True))
+	model.add(LSTM(64, batch_input_shape=(bs, X.shape[1], 8), stateful=False, return_sequences=False))
 	# model.add(LSTM(128, stateful=False, return_sequences=True))
 	# model.add(Flatten())
-	model.add(Dense(200, activation='tanh'))
+	model.add(Dense(128, activation='relu'))
 	# model.add(Activation('tanh'))
-	model.add(Dense(10, activation='tanh'))
+	# model.add(Dense(10, activation='relu'))
 	# model.add(BatchNormalization())
 	model.add(Dense(y.shape[1], activation='softmax'))
-	model.compile(loss=keras.losses.categorical_crossentropy, optimizer='adam')
+	optim = keras.optimizers.Adam(lr=1e-3, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
+	model.compile(loss=keras.losses.categorical_crossentropy, optimizer=optim)
 	for i in range(nb_epoch):
-		model.fit(X, y, epochs=1, batch_size=batch_size, verbose=1, shuffle=True)
-		model.reset_states()
+		model.fit(X, y, epochs=1, batch_size=bs, verbose=1, shuffle=True)
+		# model.reset_states()
 	return model
  
 
 series = np.load('markov_seq.npy')
 
-series = series[0:10000]
+# series = series[0:100000]
 series = series.reshape(-1, 1)
 
 onehot_encoder = OneHotEncoder(sparse=False)
@@ -63,8 +65,13 @@ onehot_encoded = onehot_encoder.fit(series)
 
 series = series.reshape(-1)
 
-data = strided_app(series, 21, 1)
-data = data[:9980] ##selecting ony 9980 points (divisible by batch_size)
+data = strided_app(series, 61, 1)
+
+batch_size = 1024
+
+l = int(len(data)/batch_size) * batch_size
+
+data = data[:l] ##selecting ony 9980 points (divisible by batch_size)
 
 X = data[:, :-1]
 # Y = np.logical_xor(data[:, 0:1], data[:, 10:11])*1.0
@@ -77,5 +84,5 @@ print(Y[0:10])
 
 for r in range(1):
 	# fit the model
-    lstm_model = fit_lstm(X, Y, 20, 5, 32)
+    lstm_model = fit_lstm(X, Y, batch_size, 5, 64)
 
