@@ -1,7 +1,7 @@
 # DNA_Compression
 
-Implementation by [kaushalshetty](https://github.com/kaushalshetty/Structured-Self-Attention)
-Paper Implemented [A Structured Self-Attentive Sentence Embedding](https://arxiv.org/abs/1703.03130)
+Implementation by [kaushalshetty](https://github.com/kaushalshetty/Structured-Self-Attention).
+Paper Implemented [A Structured Self-Attentive Sentence Embedding](https://arxiv.org/abs/1703.03130).
 
 ## How to run Attention Model on the DNA DATA
 1. Copy the `.npy` file in the folder
