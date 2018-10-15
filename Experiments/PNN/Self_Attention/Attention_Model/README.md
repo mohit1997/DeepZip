@@ -5,20 +5,19 @@ Paper Implemented [A Structured Self-Attentive Sentence Embedding](https://arxiv
 
 ## How to run Attention Model on the DNA DATA
 1. Copy the `.npy` file in the folder
-2. Edit the filename in the [Parsing/parse.py](Parsing/parse.py), the default format is chr1.fa for chromosome 1. If using the same scheme just edit the following list in the same file
+2. Edit the [utils/data_loader.py](utils/data_loader.py), in line no 133, and replace the name of the file:
 ```python
-## set range to choose which chromosomes files to parse
-## edit chromosome_list appropriately
-chromosomes_list = [1]
+X_train, Y_train = generate_positive(300000000, file='name_of_numpy_file.npy', length=max_len, stride=1, full=True)
 ```
+
 3. Run 
 ```python 
-python parse.py
+python classification.py 'dna'
 ```
-4. All numpy files are now created in [Parsing/chromosomes_N](Parsing/chromosomes_N) folder.
 
 
 ## Requirements
 1. python 2/3
 2. numpy
 3. sklearn
+4. pytorch 0.4.1
