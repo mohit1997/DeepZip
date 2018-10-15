@@ -20,4 +20,5 @@ python parse.py
 2. numpy
 3. sklearn
 
-Note: Already preprocessed file for chromosome 1 can be dowloaded from [here](https://www.dropbox.com/s/88ozf33cqsemzah/reference.npy?dl=0).
+## Note: 
+Already preprocessed file for chromosome 1 can be dowloaded from [here](https://www.dropbox.com/s/88ozf33cqsemzah/reference.npy?dl=0).
