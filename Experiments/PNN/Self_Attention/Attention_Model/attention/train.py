@@ -91,7 +91,7 @@ def train(attention_model,train_loader,criterion,optimizer, scheduler, epochs = 
             
             if steps is not None:
                 if (n_batches + 1) % (steps) == 0:
-                    torch.save(attention_model.state_dict(), "model_param_long.pkl")
+                    torch.save(attention_model.state_dict(), "model_new.pkl")
                     break
 
         print("size", y_pred.size(), y.size())
