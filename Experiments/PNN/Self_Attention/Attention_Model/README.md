@@ -22,3 +22,4 @@ python classification.py 'dna'
 2. numpy
 3. sklearn
 4. pytorch 0.4.1
+5. keras 2.2.2
