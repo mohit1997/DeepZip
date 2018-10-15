@@ -14,7 +14,8 @@ X_train, Y_train = generate_positive(300000000, file='name_of_numpy_file.npy', l
 ```python 
 python classification.py 'dna'
 ```
-
+4. The model will be saved as `model_new.pkl`
+5. [backup_models](backup_models/) contain the model trained on chromosome1.
 
 ## Requirements
 1. python 2/3
