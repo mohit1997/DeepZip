@@ -1,38 +1,21 @@
-# Structured Self-attentive sentence embeddings 
-Implementation for the paper A Structured Self-Attentive Sentence Embedding, which is published in ICLR 2017: https://arxiv.org/abs/1703.03130 .
-#### USAGE:
-For binary sentiment classification on imdb dataset run :
-`python classification.py "binary"`
+# DNA_Compression
 
-For multiclass classification on reuters dataset run :
-`python classification.py "multiclass"`
-
-You can change the model parameters in the `model_params.json file`
-Other tranining parameters like number of attention hops etc can be configured in the `config.json` file.
-
-If you want to use pretrained glove embeddings , set the `use_embeddings` parameter to `"True"` ,default is set to False. Do not forget to download the `glove.6B.50d.txt` and place it in the glove folder.
-
-
-
-#### Implemented:
-* Classification using self attention
-* Regularization using Frobenius norm
-* Gradient clipping
-* Visualizing the attention weights
-
-Instead of pruning ,used averaging over the sentence embeddings.
-
-#### Visualization:
-After training, the model is tested on 100 test points. Attention weights for the 100 test data are retrieved and used to visualize over the text using heatmaps. A file visualization.html gets saved in the visualization/ folder after successful training. The visualization code was provided by Zhouhan Lin (@hantek). Many thanks.
+## Parsing Fastq files and conversion to NPY(numpy) format
+1. Download and extract all the zip genomic files in [Parsing/fastq_files/](Parsing/fastq_files/) with .fa format.
+2. Edit the filename in the [Parsing/parse.py](Parsing/parse.py), the default format is chr1.fa for chromosome 1. If using the same scheme just edit the following list in the same file
+```python
+## set range to choose which chromosomes files to parse
+## edit chromosome_list appropriately
+chromosomes_list = [1]
+```
+3. Run 
+```python 
+python parse.py
+```
+4. All numpy files are now created in [Parsing/chromosomes_N](Parsing/chromosomes_N) folder.
 
 
-Below is a shot of the visualization on few datapoints.
-![alt text](https://github.com/kaushalshetty/Structured-Self-Attention/blob/master/visualization/attention.png "Attention Visualization")
-
-
-
-Training accuracy 93.4%
-Tested on 1000 points with 90.2% accuracy
-
----
-
+## Requirements
+1. python 2/3
+2. numpy
+3. sklearn
