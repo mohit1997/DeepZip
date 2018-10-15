@@ -1,7 +1,7 @@
 # DNA_Compression
 
 ## Parsing Fastq files and conversion to NPY(numpy) format
-1. Download and extract all the files in [fastq_files/](fastq_files/)
+1. Download and extract all the files in [Parsing/fastq_files/](Parsing/fastq_files/)
 
 ## LSTM usage
 1. To generate markovian data, use [generate_markov.py](generate_markov.py)
