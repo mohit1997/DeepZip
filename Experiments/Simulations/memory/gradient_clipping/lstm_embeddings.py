@@ -55,6 +55,7 @@ def fit_lstm(X, Y, bs, nb_epoch, neurons):
 	for i in range(nb_epoch):
 		print("Epoch: ", i)
 		model.fit(X, y, epochs=1, batch_size=bs, verbose=1, shuffle=False)
+		model.reset_state()
 		model.save('model.h5')
 	return model
  
