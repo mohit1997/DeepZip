@@ -1,6 +1,7 @@
 # DNA_Compression
 
 ## This code uses gradient clipping to allow learning long term dependencies.
+Note: The LSTM used in multi-input multi-output type where each timestep predicts the next character.
 ```python
 optim = keras.optimizers.Adam(lr=1e-3, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False, clipnorm=0.05)
 # clipnorm controls the gradient clipping by the optimizer
