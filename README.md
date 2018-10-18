@@ -9,5 +9,5 @@ Note: [Link](https://www.dropbox.com/s/88ozf33cqsemzah/reference.npy?dl=0) for D
 1. python 2/3
 2. numpy
 3. sklearn
-4. keras 2.1.3
+4. keras 2.2.2
 5. tensorflow (cpu/gpu) 1.8
