@@ -13,6 +13,10 @@ import tensorflow as tf
 import numpy as np
 tf.set_random_seed(42)
 
+import keras.backend as K
+def loss_fn(y_true, y_pred):
+    return 1/np.log(2) * K.categorical_crossentropy(y_true, y_pred)
+
 def strided_app(a, L, S):  # Window len = L, Stride len/stepsize = S
     nrows = ((a.size - L) // S) + 1
     n = a.strides[0]
@@ -43,14 +47,14 @@ def fit_lstm(X, Y, bs, nb_epoch, neurons):
 	# model.add(BatchNormalization())
 	model.add(Dense(y.shape[1], activation='softmax'))
 	optim = keras.optimizers.Adam(lr=1e-3, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, clipnorm=0.05)
-	model.compile(loss=keras.losses.categorical_crossentropy, optimizer=optim)
+	model.compile(loss=loss_fn, optimizer=optim)
 	for i in range(nb_epoch):
 		model.fit(X, y, epochs=1, batch_size=bs, verbose=1, shuffle=False)
-		# model.reset_states()
+		model.reset_states()
 	return model
  
 
-series = np.load('markov_seq.npy')
+series = np.load('short.npy')
 
 # series = series[0:100000]
 series = series.reshape(-1, 1)
