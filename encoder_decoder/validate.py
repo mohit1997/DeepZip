@@ -81,11 +81,14 @@ X1 = X[:l]
 Y1 = Y[:l]
 o1 = fit_lstm(X1, Y1, batch_size, initial=True)
 
-X2 = X[l:]
-Y2 = Y[l:]
-o2 = fit_lstm(X2, Y2, 1)
+if l < len(X):
 
-o = np.concatenate([o1, o2], axis=0)
-np.save('prob_temp', o)
+	X2 = X[l:]
+	Y2 = Y[l:]
+	o2 = fit_lstm(X2, Y2, 1)
 
+	o = np.concatenate([o1, o2], axis=0)
+	np.save('prob_temp', o)
+else:
+	np.save('prob_temp', o1)
 
