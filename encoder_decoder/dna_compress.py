@@ -50,12 +50,17 @@ def main(args):
 	with contextlib.closing(arithmeticcoding.BitOutputStream(open(outputfile, "wb"))) as bitout:
 		compress(data, bitout)
 
+	
+
+
+
+
 
 def compress(data, bitout):
 	print(bitout)
 	print(data.shape, np.unique(data))
-	strided_data = strided_app(data, 30, 1)
-	probs = np.load('prob_temp.npy').astype(np.float32)
+	data = data[:10000]
+	probs = np.load('prob_temp.npy').astype(np.float32)[:10000]
 
 	# from sklearn import preprocessing
 	# le = preprocessing.LabelEncoder()
