@@ -66,7 +66,7 @@ def fit_lstm(X, Y, bs, nb_epoch, neurons):
 	return model
  
 
-series = np.load('short.npy')[:1000000]
+series = np.load('markov_seq.npy')[:20000]
 
 # series = series[0:100000]
 series = series.reshape(-1, 1)
