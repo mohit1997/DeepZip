@@ -29,15 +29,19 @@ import tensorflow as tf
 import numpy as np
 import argparse
 import contextlib
-import arithmeticcoding_shubham_fast as arithmeticcoding_fast
+import arithmeticcoding_fast
 import json
 from tqdm import tqdm
+import struct
 
 ### Input/output file names. TODO: use argparse for this
 model_weights_file = 'model.h5'
 sequence_npy_file = 'short.npy'
-input_dir = 'compress_dir'
-input_file_prefix = input_dir + '/compressed_file'
+output_dir = 'compress_dir'
+output_file_prefix = output_dir + '/compressed_file'
+
+
+alphabet_size = 5
 
 def strided_app(a, L, S):  # Window len = L, Stride len/stepsize = S
     nrows = ((a.size - L) // S) + 1
@@ -51,10 +55,10 @@ def create_data(rows, p=0.5):
 	print(np.sum(data))/np.float32(len(data))
 	return data
  
-def predict_lstm(len_series, timesteps, bs, final_step=False):
+def predict_lstm(X, y, y_original, timesteps, bs, final_step=False):
 	old_model = load_model(model_weights_file)
 	wts = old_model.get_weights()
-	alphabet_size = 5
+
 	model = Sequential()
 	model.add(Embedding(alphabet_size, 32, batch_input_shape=(bs, timesteps)))
 	model.add(CuDNNLSTM(32, stateful=False, return_sequences=True))
@@ -71,76 +75,125 @@ def predict_lstm(len_series, timesteps, bs, final_step=False):
 	model.set_weights(wts)
 	
 	if not final_step:
-		num_iters = int((len_series)/bs)
-		series_2d = np.zeros((bs,num_iters), dtype = np.uint8)
-		# open compressed files and decompress first few characters using
+		num_iters = int((len(X)+timesteps)/bs)
+		ind = np.array(range(bs))*num_iters
+		
+		# open compressed files and compress first few characters using
 		# uniform distribution
-		f = [open(input_file_prefix+'.'+str(i),'rb') for i in range(bs)]
-		bitin = [arithmeticcoding_fast.BitInputStream(f[i]) for i in range(bs)]
-		dec = [arithmeticcoding_fast.ArithmeticDecoder(32, bitin[i]) for i in range(bs)]
-#		freqs = [arithmeticcoding.SimpleFrequencyTable(np.ones(alphabet_size)) for i in range(bs)]
+		f = [open(output_file_prefix+'.'+str(i),'wb') for i in range(bs)]
+		bitout = [arithmeticcoding_fast.BitOutputStream(f[i]) for i in range(bs)]
+		enc = [arithmeticcoding_fast.ArithmeticEncoder(32, bitout[i]) for i in range(bs)]
 		prob = np.ones(alphabet_size)/alphabet_size
 		cumul = np.zeros(alphabet_size+1, dtype = np.uint64)
-		cumul[1:] = np.cumsum(prob*10000000 + 1)		
+		cumul[1:] = np.cumsum(prob*10000000 + 1)	
 		for i in range(bs):
-			for j in range(min(num_iters,timesteps)):
-				series_2d[i,j] = dec[i].read(cumul, alphabet_size)
+			for j in range(min(timesteps, num_iters)):
+				enc[i].write(cumul, X[ind[i],j])
 		cumul = np.zeros((bs, alphabet_size+1), dtype = np.uint64)
 		for j in tqdm(range(num_iters - timesteps)):
-			prob = model.predict(series_2d[:,j:j+timesteps], batch_size=bs)
+			prob = model.predict(X[ind,:], batch_size=bs)
 			cumul[:,1:] = np.cumsum(prob*10000000 + 1, axis = 1)
 			for i in range(bs):
-#				series_2d[i,j+timesteps] = arithmetic_step(prob[i,:], freqs[i], dec[i])
-				series_2d[i,j+timesteps] = dec[i].read(cumul[i,:], alphabet_size)
+				enc[i].write(cumul[i,:], y_original[ind[i]])
+			ind = ind + 1
 		# close files
 		for i in range(bs):
-			bitin[i].close()
-			f[i].close()
-		return series_2d.reshape(-1)
+			enc[i].finish()
+			bitout[i].close()
+			f[i].close()		
 	else:
-		series = np.zeros(len_series, dtype = np.uint8)
-		f = open(input_file_prefix+'.last','rb')
-		bitin = arithmeticcoding_fast.BitInputStream(f)
-		dec = arithmeticcoding_fast.ArithmeticDecoder(32, bitin)
+		f = open(output_file_prefix+'.last','wb')
+		bitout = arithmeticcoding_fast.BitOutputStream(f)
+		enc = arithmeticcoding_fast.ArithmeticEncoder(32, bitout)
 		prob = np.ones(alphabet_size)/alphabet_size
- 
 		cumul = np.zeros(alphabet_size+1, dtype = np.uint64)
-		cumul[1:] = np.cumsum(prob*10000000 + 1)		
-		for j in range(min(timesteps,len_series)):
-			series[j] = dec.read(cumul, alphabet_size)
-		for i in tqdm(range(len_series-timesteps)):
-			prob = model.predict(series[i:i+timesteps].reshape(1,-1), batch_size=1)
-			cumul[1:] = np.cumsum(prob*10000000 + 1)
-			series[i+timesteps] = dec.read(cumul, alphabet_size)
-		bitin.close()
-		f.close()
-		return series
+		cumul[1:] = np.cumsum(prob*10000000 + 1)	
 
-def arithmetic_step(prob, freqs, dec):
-	freqs.update_table(prob*10000000+1)
-	return dec.read(freqs)
+		for j in range(timesteps):
+			enc.write(cumul, X[0,j])
+		for i in tqdm(range(len(X))):
+			prob = model.predict(X[i,:].reshape(1,-1), batch_size=1)
+			cumul[1:] = np.cumsum(prob*10000000 + 1)
+			enc.write(cumul, y_original[i][0])
+		enc.finish()
+		bitout.close()
+		f.close()
+	return
+
+
+# variable length integer encoding http://www.codecodex.com/wiki/Variable-Length_Integers
+def var_int_encode(byte_str_len, f):
+	while True:
+		this_byte = byte_str_len&127
+		byte_str_len >>= 7
+		if byte_str_len == 0:
+			f.write(struct.pack('B',this_byte))
+			break
+		f.write(struct.pack('B',this_byte|128))
+		byte_str_len -= 1
 
 def main():
 	tf.set_random_seed(42)
 	np.random.seed(0)
-	f = open(input_file_prefix+'.params','r')
-	param_dict = json.loads(f.read())
+	series = np.load(sequence_npy_file)
+#	series = series[:1000]
+	series = series.reshape(-1, 1)
+	f = open('temp_1','w')
+	f.write(''.join([str(s[0]) for s in series]))
 	f.close()
-	len_series = param_dict['len_series']
-	batch_size = param_dict['bs']
-	timesteps = param_dict['timesteps']
+	onehot_encoder = OneHotEncoder(sparse=False)
+	onehot_encoded = onehot_encoder.fit(series)
 
-	series = np.zeros(len_series,dtype=np.uint8)
+	batch_size = 100
+	timesteps = 60
 
-	l = int(len_series/batch_size)*batch_size
-	series[:l] = predict_lstm(l, timesteps, batch_size)
-	if l < len_series:
-		series[l:] = predict_lstm(len_series - l, timesteps, 1, final_step = True)
+	series = series.reshape(-1)
+	data = strided_app(series, timesteps+1, 1)
+
+	X = data[:, :-1]
+	Y_original = data[:, -1:]
+	Y = onehot_encoder.transform(Y_original)
+
+	l = int(len(series)/batch_size)*batch_size
+	predict_lstm(X, Y, Y_original, timesteps, batch_size)
+	if l < len(series)-timesteps:
+		predict_lstm(X[l:,:], Y[l:,:], Y_original[l:], timesteps, 1, final_step = True)
+	else:
+		f = open(output_file_prefix+'.last','wb')
+		bitout = arithmeticcoding_fast.BitOutputStream(f)
+		enc = arithmeticcoding_fast.ArithmeticEncoder(32, bitout) 
+		prob = np.ones(alphabet_size)/alphabet_size
+		
+		cumul = np.zeros(alphabet_size+1, dtype = np.uint64)
+		cumul[1:] = np.cumsum(prob*10000000 + 1)	
+		for j in range(l, len(series)):
+			enc.write(cumul, series[j])
+		enc.finish()
+		bitout.close() 
+		f.close()
 	
-	f = open('temp_2','w')
-	f.write(''.join([str(s) for s in series]))
+	param_dict = {'len_series': len(series), 'bs': batch_size, 'timesteps': timesteps}
+	f = open(output_file_prefix+'.params','w')
+	f.write(json.dumps(param_dict))
 	f.close()
-
+	
+	# combine files into one file
+	f = open(output_file_prefix+'.combined','wb')
+	for i in range(batch_size):
+		f_in = open(output_file_prefix+'.'+str(i),'rb')
+		byte_str = f_in.read()
+		byte_str_len = len(byte_str)
+		var_int_encode(byte_str_len, f)
+		f.write(byte_str)
+		f_in.close()
+	f_in = open(output_file_prefix+'.last','rb')
+	byte_str = f_in.read()
+	byte_str_len = len(byte_str)
+	var_int_encode(byte_str_len, f)
+	f.write(byte_str)
+	f_in.close()
+	f.close()
+					
 if __name__ == "__main__":
 	main()
 
