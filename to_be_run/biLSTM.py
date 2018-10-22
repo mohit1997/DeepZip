@@ -30,6 +30,9 @@ parser.add_argument('-gpu', action='store', default="0",
 parser.add_argument('-name', action='store', default="model1",
                     dest='name',
                     help='weights will be stored with this name')
+parser.add_argument('-len', action='store', default=64,
+                    dest='length',
+                    help='Truncated Length', type=int)
 
 
 import keras.backend as K
@@ -93,7 +96,7 @@ onehot_encoded = onehot_encoder.fit(series)
 
 series = series.reshape(-1)
 
-data = strided_app(series, 65, 1)
+data = strided_app(series, arguments.length+1, 1)
 
 batch_size = 1024
 

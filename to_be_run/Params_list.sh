@@ -1,0 +1,12 @@
+python biLSTM.py -len 30 -name bilstm30 
+python biLSTM.py -len 40 -name bilstm40 
+python biLSTM.py -len 50 -name bilstm50 
+python biGRU.py -len 30 -name bigru30 
+python biGRU.py -len 40 -name bigru40 
+python biGRU.py -len 50 -name bigru50 
+python LSTM.py -len 30 -name lstm30 
+python LSTM.py -len 40 -name lstm40 
+python LSTM.py -len 50 -name lstm50 
+python GRU.py -len 30 -name gru30 
+python GRU.py -len 40 -name gru30 
+python GRU.py -len 50 -name gru30 
