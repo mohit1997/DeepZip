@@ -29,13 +29,13 @@ import tensorflow as tf
 import numpy as np
 import argparse
 import contextlib
-import arithmeticcoding_shubham as arithmeticcoding
+import arithmeticcoding_shubham_fast as arithmeticcoding_fast
 import json
 from tqdm import tqdm
 
 ### Input/output file names. TODO: use argparse for this
 model_weights_file = 'model.h5'
-sequence_npy_file = 'short.npy'
+sequence_npy_file = 'chr1.npy'
 output_dir = 'compress_dir'
 output_file_prefix = output_dir + '/compressed_file'
 
@@ -80,18 +80,20 @@ def predict_lstm(X, y, y_original, timesteps, bs, final_step=False):
 		# open compressed files and compress first few characters using
 		# uniform distribution
 		f = [open(output_file_prefix+'.'+str(i),'wb') for i in range(bs)]
-		bitout = [arithmeticcoding.BitOutputStream(f[i]) for i in range(bs)]
-		enc = [arithmeticcoding.ArithmeticEncoder(32, bitout[i]) for i in range(bs)]
-		freqs = [arithmeticcoding.SimpleFrequencyTable(np.ones(alphabet_size)) for i in range(bs)]
-		
+		bitout = [arithmeticcoding_fast.BitOutputStream(f[i]) for i in range(bs)]
+		enc = [arithmeticcoding_fast.ArithmeticEncoder(32, bitout[i]) for i in range(bs)]
+		prob = np.ones(alphabet_size)/alphabet_size
+		cumul = np.zeros(alphabet_size+1, dtype = np.uint64)
+		cumul[1:] = np.cumsum(prob*10000000 + 1)	
 		for i in range(bs):
-			prob = np.ones(alphabet_size)/alphabet_size
-			for j in range(timesteps):
-				arithmetic_step(prob, freqs[i], enc[i], X[ind[i],j]) 
+			for j in range(min(timesteps, num_iters)):
+				enc[i].write(cumul, X[ind[i],j])
+		cumul = np.zeros((bs, alphabet_size+1), dtype = np.uint64)
 		for j in tqdm(range(num_iters - timesteps)):
 			prob = model.predict(X[ind,:], batch_size=bs)
+			cumul[:,1:] = np.cumsum(prob*10000000 + 1, axis = 1)
 			for i in range(bs):
-				arithmetic_step(prob[i,:], freqs[i], enc[i], y_original[ind[i]])
+				enc[i].write(cumul[i,:], y_original[ind[i]])
 			ind = ind + 1
 		# close files
 		for i in range(bs):
@@ -100,26 +102,23 @@ def predict_lstm(X, y, y_original, timesteps, bs, final_step=False):
 			f[i].close()		
 	else:
 		f = open(output_file_prefix+'.last','wb')
-		bitout = arithmeticcoding.BitOutputStream(f)
-		enc = arithmeticcoding.ArithmeticEncoder(32, bitout)
-		freqs = arithmeticcoding.SimpleFrequencyTable(np.ones(alphabet_size))
+		bitout = arithmeticcoding_fast.BitOutputStream(f)
+		enc = arithmeticcoding_fast.ArithmeticEncoder(32, bitout)
 		prob = np.ones(alphabet_size)/alphabet_size
+		cumul = np.zeros(alphabet_size+1, dtype = np.uint64)
+		cumul[1:] = np.cumsum(prob*10000000 + 1)	
 
 		for j in range(timesteps):
-			arithmetic_step(prob, freqs, enc, X[0,j]) 
+			enc.write(cumul, X[0,j])
 		for i in tqdm(range(len(X))):
 			prob = model.predict(X[i,:].reshape(1,-1), batch_size=1)
-			arithmetic_step(prob, freqs, enc, y_original[i])
+			cumul[1:] = np.cumsum(prob*10000000 + 1)
+			enc.write(cumul, y_original[i][0])
 		enc.finish()
 		bitout.close()
 		f.close()
 	return
 
-def arithmetic_step(prob, freqs, enc, y_original):
-#	freqs = arithmeticcoding.SimpleFrequencyTable([int(np.asscalar(p*10000000+1)) for p in prob])
-	freqs.update_table(prob*10000000+1)
-	enc.write(freqs, y_original)
-	return
 
 def main():
 	tf.set_random_seed(42)
@@ -133,12 +132,11 @@ def main():
 	onehot_encoder = OneHotEncoder(sparse=False)
 	onehot_encoded = onehot_encoder.fit(series)
 
-	batch_size = 1001
+	batch_size = 10000
 	timesteps = 60
 
 	series = series.reshape(-1)
 	data = strided_app(series, timesteps+1, 1)
-	timesteps = 60
 
 	X = data[:, :-1]
 	Y_original = data[:, -1:]
@@ -150,12 +148,14 @@ def main():
 		predict_lstm(X[l:,:], Y[l:,:], Y_original[l:], timesteps, 1, final_step = True)
 	else:
 		f = open(output_file_prefix+'.last','wb')
-		bitout = arithmeticcoding.BitOutputStream(f)
-		enc = arithmeticcoding.ArithmeticEncoder(32, bitout) 
-		freqs = arithmeticcoding.SimpleFrequencyTable(np.ones(alphabet_size))
+		bitout = arithmeticcoding_fast.BitOutputStream(f)
+		enc = arithmeticcoding_fast.ArithmeticEncoder(32, bitout) 
 		prob = np.ones(alphabet_size)/alphabet_size
+		
+		cumul = np.zeros(alphabet_size+1, dtype = np.uint64)
+		cumul[1:] = np.cumsum(prob*10000000 + 1)	
 		for j in range(l, len(series)):
-			arithmetic_step(prob, freqs, enc, series[j])
+			enc.write(cumul, series[j])
 		enc.finish()
 		bitout.close() 
 		f.close()

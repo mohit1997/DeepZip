@@ -29,7 +29,7 @@ import tensorflow as tf
 import numpy as np
 import argparse
 import contextlib
-import arithmeticcoding_shubham as arithmeticcoding
+import arithmeticcoding_shubham_fast as arithmeticcoding_fast
 import json
 from tqdm import tqdm
 
@@ -76,18 +76,22 @@ def predict_lstm(len_series, timesteps, bs, final_step=False):
 		# open compressed files and decompress first few characters using
 		# uniform distribution
 		f = [open(input_file_prefix+'.'+str(i),'rb') for i in range(bs)]
-		bitin = [arithmeticcoding.BitInputStream(f[i]) for i in range(bs)]
-		dec = [arithmeticcoding.ArithmeticDecoder(32, bitin[i]) for i in range(bs)]
-		freqs = [arithmeticcoding.SimpleFrequencyTable(np.ones(alphabet_size)) for i in range(bs)]
-		
+		bitin = [arithmeticcoding_fast.BitInputStream(f[i]) for i in range(bs)]
+		dec = [arithmeticcoding_fast.ArithmeticDecoder(32, bitin[i]) for i in range(bs)]
+#		freqs = [arithmeticcoding.SimpleFrequencyTable(np.ones(alphabet_size)) for i in range(bs)]
+		prob = np.ones(alphabet_size)/alphabet_size
+		cumul = np.zeros(alphabet_size+1, dtype = np.uint64)
+		cumul[1:] = np.cumsum(prob*10000000 + 1)		
 		for i in range(bs):
-			prob = np.ones(alphabet_size)/alphabet_size
-			for j in range(timesteps):
-				series_2d[i,j] = arithmetic_step(prob, freqs[i],dec[i])
+			for j in range(min(num_iters,timesteps)):
+				series_2d[i,j] = dec[i].read(cumul, alphabet_size)
+		cumul = np.zeros((bs, alphabet_size+1), dtype = np.uint64)
 		for j in tqdm(range(num_iters - timesteps)):
 			prob = model.predict(series_2d[:,j:j+timesteps], batch_size=bs)
+			cumul[:,1:] = np.cumsum(prob*10000000 + 1, axis = 1)
 			for i in range(bs):
-				series_2d[i,j+timesteps] = arithmetic_step(prob[i,:], freqs[i], dec[i])
+#				series_2d[i,j+timesteps] = arithmetic_step(prob[i,:], freqs[i], dec[i])
+				series_2d[i,j+timesteps] = dec[i].read(cumul[i,:], alphabet_size)
 		# close files
 		for i in range(bs):
 			bitin[i].close()
@@ -96,23 +100,24 @@ def predict_lstm(len_series, timesteps, bs, final_step=False):
 	else:
 		series = np.zeros(len_series, dtype = np.uint8)
 		f = open(input_file_prefix+'.last','rb')
-		bitin = arithmeticcoding.BitInputStream(f)
-		dec = arithmeticcoding.ArithmeticDecoder(32, bitin)
-		freqs = arithmeticcoding.SimpleFrequencyTable(np.ones(alphabet_size))
+		bitin = arithmeticcoding_fast.BitInputStream(f)
+		dec = arithmeticcoding_fast.ArithmeticDecoder(32, bitin)
 		prob = np.ones(alphabet_size)/alphabet_size
  
+		cumul = np.zeros(alphabet_size+1, dtype = np.uint64)
+		cumul[1:] = np.cumsum(prob*10000000 + 1)		
 		for j in range(min(timesteps,len_series)):
-			series[j] = arithmetic_step(prob, freqs, dec) 
+			series[j] = dec.read(cumul, alphabet_size)
 		for i in tqdm(range(len_series-timesteps)):
 			prob = model.predict(series[i:i+timesteps].reshape(1,-1), batch_size=1)
-			series[i+timesteps] = arithmetic_step(prob, freqs, dec)
+			cumul[1:] = np.cumsum(prob*10000000 + 1)
+			series[i+timesteps] = dec.read(cumul, alphabet_size)
 		bitin.close()
 		f.close()
 		return series
 
 def arithmetic_step(prob, freqs, dec):
-	freqs = arithmeticcoding.SimpleFrequencyTable(prob*10000000+1)
-#	freqs.update_table(prob*10000000+1)
+	freqs.update_table(prob*10000000+1)
 	return dec.read(freqs)
 
 def main():
