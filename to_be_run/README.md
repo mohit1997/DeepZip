@@ -13,6 +13,12 @@ python script.py -d chr1.npy -gpu gpuid -name 'name of logs and weights file you
 # -name argument will save the weights and the logs with the name you provide here
 ```
 
+3. Alternately you can edit [Params_list.sh](Params_list.sh) and then run
+```bash
+bash Params_list.sh
+```
+Note: Please edit the flags appropriately to choose data in [Params_list.sh](Params_list.sh), one example is given in [Params_backup.sh](Params_backup.sh) to choose `chr1.npy`(chromosome 1)
+
 ## Requirements
 1. python 2/3
 2. numpy
