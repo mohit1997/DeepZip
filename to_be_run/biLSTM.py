@@ -21,14 +21,17 @@ tf.set_random_seed(42)
 np.random.seed(0)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-d', action='store', default="markov_seq.npy",
+parser.add_argument('-data', action='store', default="markov_seq.npy",
                     dest='data',
                     help='choose sequence file')
 parser.add_argument('-gpu', action='store', default="0",
                     dest='gpu',
                     help='choose gpu number')
-parser.add_argument('-name', action='store', default="model1",
+parser.add_argument('-model', action='store', default="model1",
                     dest='name',
+                    help='weights will be stored with this name')
+parser.add_argument('-epochs', action='store', default=2,
+                    dest='nbepochs', type=int,
                     help='weights will be stored with this name')
 parser.add_argument('-len', action='store', default=64,
                     dest='length',
@@ -72,8 +75,8 @@ def fit_lstm(X, Y, bs, nb_epoch, neurons):
 	model.add(Dense(y.shape[1], activation='softmax'))
 	optim = keras.optimizers.Adam(lr=1e-3, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0, amsgrad=False)
 	model.compile(loss=loss_fn, optimizer=optim)
-	filepath = arguments.name + "weights{loss:.4f}.best.hdf5"
-	logfile = arguments.name + 'log.csv'
+	filepath = arguments.name
+	logfile = arguments.name + '.log.csv'
 	csv_logger = CSVLogger(logfile, append=True, separator=';')
 	checkpoint = ModelCheckpoint(filepath, monitor='loss', verbose=1, save_best_only=True, mode='min', save_weights_only=True)
 	callbacks_list = [checkpoint, csv_logger]
@@ -85,7 +88,7 @@ def fit_lstm(X, Y, bs, nb_epoch, neurons):
 arguments = parser.parse_args()
 print(arguments)
 os.environ["CUDA_VISIBLE_DEVICES"] = arguments.gpu
-series = np.load(arguments.data)[:10000]
+series = np.load(arguments.data)
 print(series.shape)
 
 # series = series[0:100000]
@@ -115,5 +118,5 @@ Y = onehot_encoder.transform(Y)
 
 for r in range(1):
 	# fit the model
-    lstm_model = fit_lstm(X, Y, batch_size, 5, 32)
+    lstm_model = fit_lstm(X, Y, batch_size, args.nbepochs, 32)
 
