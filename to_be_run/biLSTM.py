@@ -118,5 +118,5 @@ Y = onehot_encoder.transform(Y)
 
 for r in range(1):
 	# fit the model
-    lstm_model = fit_lstm(X, Y, batch_size, args.nbepochs, 32)
+    lstm_model = fit_lstm(X, Y, batch_size, arguments.nbepochs, 32)
 
