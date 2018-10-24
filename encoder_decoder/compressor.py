@@ -34,11 +34,22 @@ import json
 from tqdm import tqdm
 import struct
 
+
+parser = argparse.ArgumentParser(description='Input')
+parser.add_argument('-model', action='store', dest='model_weights_file',
+                    help='model file')
+parser.add_argument('-data', action='store', dest='sequence_npy_file',
+                    help='data file')
+parser.add_argument('-output', action='store',dest='output_file_prefix',
+                    help='compressed file name')
+
+args = parser.parse_args()
+
 ### Input/output file names. TODO: use argparse for this
-model_weights_file = 'model.h5'
-sequence_npy_file = 'short.npy'
-output_dir = 'compress_dir'
-output_file_prefix = output_dir + '/compressed_file'
+#model_weights_file = 'model.h5'
+#sequence_npy_file = 'short.npy'
+#output_dir = 'compress_dir'
+#output_file_prefix = output_dir + '/compressed_file'
 
 
 alphabet_size = 5
@@ -50,13 +61,8 @@ def strided_app(a, L, S):  # Window len = L, Stride len/stepsize = S
         a, shape=(nrows, L), strides=(S * n, n), writeable=False)
 
 
-def create_data(rows, p=0.5):
-	data = np.random.choice(2, rows, p=[p, 1-p])
-	print(np.sum(data))/np.float32(len(data))
-	return data
- 
 def predict_lstm(X, y, y_original, timesteps, bs, final_step=False):
-	old_model = load_model(model_weights_file)
+	old_model = load_model(args.model_weights_file)
 	wts = old_model.get_weights()
 
 	model = Sequential()
@@ -80,7 +86,7 @@ def predict_lstm(X, y, y_original, timesteps, bs, final_step=False):
 		
 		# open compressed files and compress first few characters using
 		# uniform distribution
-		f = [open(output_file_prefix+'.'+str(i),'wb') for i in range(bs)]
+		f = [open(args.output_file_prefix+'.'+str(i),'wb') for i in range(bs)]
 		bitout = [arithmeticcoding_fast.BitOutputStream(f[i]) for i in range(bs)]
 		enc = [arithmeticcoding_fast.ArithmeticEncoder(32, bitout[i]) for i in range(bs)]
 		prob = np.ones(alphabet_size)/alphabet_size
@@ -102,7 +108,7 @@ def predict_lstm(X, y, y_original, timesteps, bs, final_step=False):
 			bitout[i].close()
 			f[i].close()		
 	else:
-		f = open(output_file_prefix+'.last','wb')
+		f = open(args.output_file_prefix+'.last','wb')
 		bitout = arithmeticcoding_fast.BitOutputStream(f)
 		enc = arithmeticcoding_fast.ArithmeticEncoder(32, bitout)
 		prob = np.ones(alphabet_size)/alphabet_size
@@ -135,7 +141,7 @@ def var_int_encode(byte_str_len, f):
 def main():
 	tf.set_random_seed(42)
 	np.random.seed(0)
-	series = np.load(sequence_npy_file)
+	series = np.load(args.sequence_npy_file)
 #	series = series[:1000]
 	series = series.reshape(-1, 1)
 	f = open('temp_1','w')
@@ -159,7 +165,7 @@ def main():
 	if l < len(series)-timesteps:
 		predict_lstm(X[l:,:], Y[l:,:], Y_original[l:], timesteps, 1, final_step = True)
 	else:
-		f = open(output_file_prefix+'.last','wb')
+		f = open(args.output_file_prefix+'.last','wb')
 		bitout = arithmeticcoding_fast.BitOutputStream(f)
 		enc = arithmeticcoding_fast.ArithmeticEncoder(32, bitout) 
 		prob = np.ones(alphabet_size)/alphabet_size
@@ -173,20 +179,20 @@ def main():
 		f.close()
 	
 	param_dict = {'len_series': len(series), 'bs': batch_size, 'timesteps': timesteps}
-	f = open(output_file_prefix+'.params','w')
+	f = open(args.output_file_prefix+'.params','w')
 	f.write(json.dumps(param_dict))
 	f.close()
 	
 	# combine files into one file
-	f = open(output_file_prefix+'.combined','wb')
+	f = open(args.output_file_prefix+'.combined','wb')
 	for i in range(batch_size):
-		f_in = open(output_file_prefix+'.'+str(i),'rb')
+		f_in = open(args.output_file_prefix+'.'+str(i),'rb')
 		byte_str = f_in.read()
 		byte_str_len = len(byte_str)
 		var_int_encode(byte_str_len, f)
 		f.write(byte_str)
 		f_in.close()
-	f_in = open(output_file_prefix+'.last','rb')
+	f_in = open(args.output_file_prefix+'.last','rb')
 	byte_str = f_in.read()
 	byte_str_len = len(byte_str)
 	var_int_encode(byte_str_len, f)
