@@ -13,6 +13,7 @@ do
     echo $model_name
     script_name=$1.py
     echo $script_name
+    python $script_name -data $f -epochs 10 -gpu $2 -model $model_name
     echo "- - - - - "
 done
 
