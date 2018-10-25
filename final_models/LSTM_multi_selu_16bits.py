@@ -35,6 +35,7 @@ parser.add_argument('-len', action='store', default=64,
                     help='Truncated Length', type=int)
 
 import keras.backend as K
+K.set_floatx('float16')
 
 def loss_fn(y_true, y_pred):
     return 1/np.log(2) * K.categorical_crossentropy(y_true, y_pred)

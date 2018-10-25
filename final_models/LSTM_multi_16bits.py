@@ -35,6 +35,7 @@ parser.add_argument('-len', action='store', default=64,
                     help='Truncated Length', type=int)
 
 import keras.backend as K
+K.set_floatx('float16')
 
 def loss_fn(y_true, y_pred):
     return 1/np.log(2) * K.categorical_crossentropy(y_true, y_pred)
@@ -56,22 +57,19 @@ def create_data(rows, p=0.5):
 # fit an LSTM network to training data
 def fit_lstm(X, Y, bs, nb_epoch, neurons):
 	y = Y
-
-	init = keras.initializers.lecun_uniform(seed=0)
-
 	decay = bs*1.0/len(X)
 	model = Sequential()
 	model.add(Embedding(y.shape[1], 32, batch_input_shape=(bs, X.shape[1])))
-	model.add(CuDNNLSTM(32, stateful=False, return_sequences=True, kernel_initializer=init))
-	model.add(CuDNNLSTM(32, stateful=False, return_sequences=True, kernel_initializer=init))
+	model.add(CuDNNLSTM(32, stateful=False, return_sequences=True))
+	model.add(CuDNNLSTM(32, stateful=False, return_sequences=True))
 	# model.add(LSTM(128, stateful=False, return_sequences=True))
 	# decay = bs*1.0/len(X)
 	model.add(Flatten())
-	model.add(Dense(64, activation=keras.activations.selu, kernel_initializer=init))
+	model.add(Dense(64, activation='relu'))
 	# model.add(Activation('tanh'))
 	# model.add(Dense(10, activation='relu'))
 	# model.add(BatchNormalization())
-	model.add(Dense(y.shape[1], activation='softmax', kernel_initializer=init))
+	model.add(Dense(y.shape[1], activation='softmax'))
 	optim = keras.optimizers.Adam(lr=1e-3, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0, amsgrad=False)
 	model.compile(loss=loss_fn, optimizer=optim)
 	filepath = arguments.name
@@ -97,7 +95,7 @@ onehot_encoder = OneHotEncoder(sparse=False)
 onehot_encoded = onehot_encoder.fit(series)
 
 series = series.reshape(-1)
-
+print(series[:10])
 data = strided_app(series, arguments.length+1, 1)
 
 batch_size = 1024
