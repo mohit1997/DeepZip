@@ -18,7 +18,7 @@ do
     echo $model_name
     script_name=$1.py
     echo $script_name
-    python $script_name -d $f -gpu $2 -name $model_name
+    python trainer.py -model_name $1 -d $f -gpu $2 -name $model_name
     
     output_prefix="$compressed_dir/$basename/compressed"
     #python ../encoder_decoder/compressor.py -data $f -model $model_name -output $output_prefix  
