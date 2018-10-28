@@ -57,7 +57,7 @@ def fit_lstm(X, Y, bs, initial=False):
 	return o
  
 
-series = np.load('chr1.npy')
+series = np.load('short.npy')
 
 # series = series[0:100000]
 series = series.reshape(-1, 1)

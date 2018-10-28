@@ -34,11 +34,21 @@ import json
 from tqdm import tqdm
 import struct
 
+parser = argparse.ArgumentParser(description='Input')
+parser.add_argument('-model', action='store', dest='model_weights_file',
+                    help='model file')
+parser.add_argument('-input', action='store', dest='input_file_prefix',
+                    help='data file')
+parser.add_argument('-output', action='store',dest='output_file_name',
+                    help='compressed file name')
+
+args = parser.parse_args()
+
 ### Input/output file names. TODO: use argparse for this
-model_weights_file = 'model.h5'
-sequence_npy_file = 'short.npy'
-input_dir = 'compress_dir'
-input_file_prefix = input_dir + '/compressed_file'
+#model_weights_file = 'model.h5'
+#sequence_npy_file = 'short.npy'
+#input_dir = 'compress_dir'
+#args.input_file_prefix = input_dir + '/compressed_file'
 
 def strided_app(a, L, S):  # Window len = L, Stride len/stepsize = S
     nrows = ((a.size - L) // S) + 1
@@ -53,7 +63,7 @@ def create_data(rows, p=0.5):
 	return data
  
 def predict_lstm(len_series, timesteps, bs, final_step=False):
-	old_model = load_model(model_weights_file)
+	old_model = load_model(args.model_weights_file)
 	wts = old_model.get_weights()
 	alphabet_size = 5
 	model = Sequential()
@@ -76,7 +86,7 @@ def predict_lstm(len_series, timesteps, bs, final_step=False):
 		series_2d = np.zeros((bs,num_iters), dtype = np.uint8)
 		# open compressed files and decompress first few characters using
 		# uniform distribution
-		f = [open(input_file_prefix+'.'+str(i),'rb') for i in range(bs)]
+		f = [open(args.input_file_prefix+'.'+str(i),'rb') for i in range(bs)]
 		bitin = [arithmeticcoding_fast.BitInputStream(f[i]) for i in range(bs)]
 		dec = [arithmeticcoding_fast.ArithmeticDecoder(32, bitin[i]) for i in range(bs)]
 		prob = np.ones(alphabet_size)/alphabet_size
@@ -98,7 +108,7 @@ def predict_lstm(len_series, timesteps, bs, final_step=False):
 		return series_2d.reshape(-1)
 	else:
 		series = np.zeros(len_series, dtype = np.uint8)
-		f = open(input_file_prefix+'.last','rb')
+		f = open(args.input_file_prefix+'.last','rb')
 		bitin = arithmeticcoding_fast.BitInputStream(f)
 		dec = arithmeticcoding_fast.ArithmeticDecoder(32, bitin)
 		prob = np.ones(alphabet_size)/alphabet_size
@@ -135,21 +145,21 @@ def var_int_decode(f):
 def main():
 	tf.set_random_seed(42)
 	np.random.seed(0)
-	f = open(input_file_prefix+'.params','r')
+	f = open(args.input_file_prefix+'.params','r')
 	param_dict = json.loads(f.read())
 	f.close()
 	len_series = param_dict['len_series']
 	batch_size = param_dict['bs']
 	timesteps = param_dict['timesteps']
 
-	f = open(input_file_prefix+'.combined','rb')
+	f = open(args.input_file_prefix+'.combined','rb')
 	for i in range(batch_size):
-		f_out = open(input_file_prefix+'.'+str(i),'wb')
+		f_out = open(args.input_file_prefix+'.'+str(i),'wb')
 		byte_str_len = var_int_decode(f)
 		byte_str = f.read(byte_str_len)
 		f_out.write(byte_str)
 		f_out.close()
-	f_out = open(input_file_prefix+'.last','wb')
+	f_out = open(args.input_file_prefix+'.last','wb')
 	byte_str_len = var_int_decode(f)
 	byte_str = f.read(byte_str_len)
 	f_out.write(byte_str)
@@ -163,7 +173,7 @@ def main():
 	if l < len_series:
 		series[l:] = predict_lstm(len_series - l, timesteps, 1, final_step = True)
 	
-	f = open('temp_2','w')
+	f = open(args.output_file_name,'w')
 	f.write(''.join([str(s) for s in series]))
 	f.close()
 

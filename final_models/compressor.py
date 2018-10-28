@@ -34,6 +34,8 @@ import json
 from tqdm import tqdm
 import struct
 import models
+import tempfile
+import shutil
 
 parser = argparse.ArgumentParser(description='Input')
 parser.add_argument('-model', action='store', dest='model_weights_file',
@@ -44,19 +46,14 @@ parser.add_argument('-batch_size', action='store', dest='batch_size', type=int,
                     help='model file')
 parser.add_argument('-data', action='store', dest='sequence_npy_file',
                     help='data file')
+parser.add_argument('-data_params', action='store', dest='params_file',
+                    help='params file')
 parser.add_argument('-output', action='store',dest='output_file_prefix',
                     help='compressed file name')
 
 args = parser.parse_args()
-
 from keras import backend as K
-K.set_floatx('float16')
 
-### Input/output file names. TODO: use argparse for this
-#model_weights_file = 'model.h5'
-#sequence_npy_file = 'short.npy'
-#output_dir = 'compress_dir'
-#output_file_prefix = output_dir + '/compressed_file'
 
 
 
@@ -77,7 +74,7 @@ def predict_lstm(X, y, y_original, timesteps, bs, alphabet_size, model_name, fin
                 
                 # open compressed files and compress first few characters using
                 # uniform distribution
-                f = [open(args.output_file_prefix+'.'+str(i),'wb') for i in range(bs)]
+                f = [open(args.temp_file_prefix+'.'+str(i),'wb') for i in range(bs)]
                 bitout = [arithmeticcoding_fast.BitOutputStream(f[i]) for i in range(bs)]
                 enc = [arithmeticcoding_fast.ArithmeticEncoder(32, bitout[i]) for i in range(bs)]
                 prob = np.ones(alphabet_size)/alphabet_size
@@ -99,7 +96,7 @@ def predict_lstm(X, y, y_original, timesteps, bs, alphabet_size, model_name, fin
                         bitout[i].close()
                         f[i].close()            
         else:
-                f = open(args.output_file_prefix+'.last','wb')
+                f = open(args.temp_file_prefix+'.last','wb')
                 bitout = arithmeticcoding_fast.BitOutputStream(f)
                 enc = arithmeticcoding_fast.ArithmeticEncoder(32, bitout)
                 prob = np.ones(alphabet_size)/alphabet_size
@@ -130,19 +127,30 @@ def var_int_encode(byte_str_len, f):
                 byte_str_len -= 1
 
 def main():
+        args.temp_dir = tempfile.mkdtemp()
+        args.temp_file_prefix = args.temp_dir + "/compressed"
         tf.set_random_seed(42)
         np.random.seed(0)
         series = np.load(args.sequence_npy_file)
-#       series = series[:1000]
         series = series.reshape(-1, 1)
-        f = open('temp_1','w')
-        f.write(''.join([str(s[0]) for s in series]))
-        f.close()
         onehot_encoder = OneHotEncoder(sparse=False)
         onehot_encoded = onehot_encoder.fit(series)
 
         batch_size = args.batch_size
         timesteps = 64
+         
+        
+        with open(args.params_file, 'r') as f:
+                params = json.load(f)
+
+        params['len_series'] = len(series)
+        params['bs'] = batch_size
+        params['timesteps'] = timesteps
+
+        with open(args.output_file_prefix+'.params','w') as f:
+                json.dump(params, f, indent=4)
+
+        alphabet_size = len(params['id2char_dict'])
 
         series = series.reshape(-1)
         data = strided_app(series, timesteps+1, 1)
@@ -150,14 +158,14 @@ def main():
         X = data[:, :-1]
         Y_original = data[:, -1:]
         Y = onehot_encoder.transform(Y_original)
-        alphabet_size = Y.shape[1]
 
         l = int(len(series)/batch_size)*batch_size
+        
         predict_lstm(X, Y, Y_original, timesteps, batch_size, alphabet_size, args.model_name)
         if l < len(series)-timesteps:
                 predict_lstm(X[l:,:], Y[l:,:], Y_original[l:], timesteps, 1, alphabet_size, args.model_name, final_step = True)
         else:
-                f = open(args.output_file_prefix+'.last','wb')
+                f = open(args.temp_file_prefix+'.last','wb')
                 bitout = arithmeticcoding_fast.BitOutputStream(f)
                 enc = arithmeticcoding_fast.ArithmeticEncoder(32, bitout) 
                 prob = np.ones(alphabet_size)/alphabet_size
@@ -170,114 +178,26 @@ def main():
                 bitout.close() 
                 f.close()
         
-        param_dict = {'len_series': len(series), 'bs': batch_size, 'timesteps': timesteps}
-        f = open(args.output_file_prefix+'.params','w')
-        f.write(json.dumps(param_dict))
-        f.close()
         
         # combine files into one file
         f = open(args.output_file_prefix+'.combined','wb')
         for i in range(batch_size):
-                f_in = open(args.output_file_prefix+'.'+str(i),'rb')
+                f_in = open(args.temp_file_prefix+'.'+str(i),'rb')
                 byte_str = f_in.read()
                 byte_str_len = len(byte_str)
                 var_int_encode(byte_str_len, f)
                 f.write(byte_str)
                 f_in.close()
-        f_in = open(args.output_file_prefix+'.last','rb')
+        f_in = open(args.temp_file_prefix+'.last','rb')
         byte_str = f_in.read()
         byte_str_len = len(byte_str)
         var_int_encode(byte_str_len, f)
         f.write(byte_str)
         f_in.close()
         f.close()
+        shutil.rmtree(args.temp_dir)
+
                                         
 if __name__ == "__main__":
         main()
 
-#np.random.seed(0)
-#
-#def softmax(x):
-#    """Compute softmax values for each sets of scores in x."""
-#    e_x = np.exp(x)
-#    return e_x
-#
-## Command line main application function.
-#
-#def strided_app(a, L, S):  # Window len = L, Stride len/stepsize = S
-#    nrows = ((a.size - L) // S) + 1
-#    n = a.strides[0]
-#    return np.lib.stride_tricks.as_strided(
-#        a, shape=(nrows, L), strides=(S * n, n), writeable=False)
-#
-#
-#def generate_probability(n_classes):
-#       return softmax(np.random.uniform(10, 11, n_classes))
-#
-#
-#def main(args):
-#       # Handle command line arguments
-#       if len(args) != 1:
-#               sys.exit("Usage: python adaptive-arithmetic-compress.py OutputFile")
-#       outputfile,  = args
-#       
-#       # Perform file compression
-#       data = np.load('chr1.npy').astype(np.int32)
-#       with contextlib.closing(arithmeticcoding.BitOutputStream(open(outputfile, "wb"))) as bitout:
-#               compress(data, bitout)
-#
-#       
-#
-#
-#
-#
-#
-#def compress(data, bitout):
-#       print(bitout)
-#       print(data.shape, np.unique(data))
-#       data = data[:10000]
-#       probs = np.load('prob_temp.npy').astype(np.float32)[:10000]
-#
-#       # from sklearn import preprocessing
-#       # le = preprocessing.LabelEncoder()
-#       # initfreqs = arithmeticcoding.FlatFrequencyTable(6)
-#       # freqs = arithmeticcoding.SimpleFrequencyTable([500, 500, 500, 500, 100, 1])
-#       enc = arithmeticcoding.ArithmeticEncoder(32, bitout)
-#
-#       for i in range(len(data)):
-#               symbol = data[i]
-#               prob = probs[i]
-#               l = [int(p*10000000+1) for p in prob]
-#               l.append(1)
-#               # print(prob, symbol)
-#               freqs = arithmeticcoding.SimpleFrequencyTable(l)
-#               enc.write(freqs, symbol[0])
-#
-#       enc.write(freqs, 5)
-#       enc.finish()
-#
-#       # sym_list = np.array([97, 99, 103, 110, 116])
-#       # le.fit(sym_list)
-#       # while True:
-#       #       # Read and encode one byte
-#       #       symbol = inp.read(1)
-#
-#       #       if len(symbol) == 0:
-#       #               break
-#       #       symbol = symbol[0] if python3 else ord(symbol)
-#       #       o = le.transform([symbol])
-#       #       symbol = o[0]
-#       #       print(symbol)
-#       #       enc.write(freqs, symbol)
-#       #       # freqs.increment(symbol)
-#       # print(np.unique(sym_list))
-#       # enc.write(freqs, 5)  # EOF
-#       # enc.finish()  # Flush remaining code bits
-#
-#
-#
-#
-#
-## Main launcher
-#if __name__ == "__main__":
-#       main(sys.argv[1 : ])

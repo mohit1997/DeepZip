@@ -22,7 +22,7 @@ tf.set_random_seed(42)
 np.random.seed(0)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-d', action='store', default="markov_seq.npy",
+parser.add_argument('-d', action='store', default=None,
                     dest='data',
                     help='choose sequence file')
 parser.add_argument('-gpu', action='store', default="0",
@@ -33,10 +33,10 @@ parser.add_argument('-name', action='store', default="model1",
                     help='weights will be stored with this name')
 parser.add_argument('-model_name', action='store', default=None,
                     dest='model_name',
-                    help='weights will be stored with this name')
-parser.add_argument('-len', action='store', default=64,
-                    dest='length',
-                    help='Truncated Length', type=int)
+                    help='name of the model to call')
+parser.add_argument('-log_file', action='store',
+                    dest='log_file',
+                    help='Log file')
 
 import keras.backend as K
 
@@ -68,14 +68,12 @@ def generate_single_output_data(file_path,batch_size,time_steps):
         return X,Y
 
         
-        # fit an LSTM network to training data
 def fit_model(X, Y, bs, nb_epoch, model):
         y = Y
-        optim = keras.optimizers.Adam(lr=1e-3, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0, amsgrad=False)
+        optim = keras.optimizers.Adam(lr=1e-3, beta_1=0.9, beta_2=0.999, epsilon=1e-3, decay=0, amsgrad=False)
         model.compile(loss=loss_fn, optimizer=optim)
         checkpoint = ModelCheckpoint(arguments.name, monitor='loss', verbose=1, save_best_only=True, mode='min', save_weights_only=True)
-        logfile = arguments.name + 'log.csv'
-        csv_logger = CSVLogger(logfile, append=True, separator=';')
+        csv_logger = CSVLogger(arguments.log_file, append=True, separator=';')
         callbacks_list = [checkpoint, csv_logger]
         for i in range(nb_epoch):
                 model.fit(X, y, epochs=1, batch_size=bs, verbose=1, shuffle=True, callbacks=callbacks_list)
@@ -86,10 +84,12 @@ def fit_model(X, Y, bs, nb_epoch, model):
                 
 arguments = parser.parse_args()
 print(arguments)
-batch_size=1024
-os.environ["CUDA_VISIBLE_DEVICES"] = arguments.gpu
 
-X,Y = generate_single_output_data(arguments.data,batch_size, arguments.length)
-model = getattr(models, arguments.model_name)(batch_size, arguments.length, Y.shape[1])
-fit_model(X, Y, batch_size, 5, model)
+batch_size=1024
+sequence_length=64
+num_epochs=10
+
+X,Y = generate_single_output_data(arguments.data,batch_size, sequence_length)
+model = getattr(models, arguments.model_name)(batch_size, sequence_length, Y.shape[1])
+fit_model(X, Y, batch_size,num_epochs , model)
 

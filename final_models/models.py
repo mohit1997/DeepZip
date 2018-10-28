@@ -10,15 +10,26 @@ from keras.callbacks import ModelCheckpoint
 import keras
 from sklearn.preprocessing import OneHotEncoder
 from keras.layers.normalization import BatchNormalization
+from keras.layers.advanced_activations import ELU
 import tensorflow as tf
 import numpy as np
 import argparse
 import os
 from keras.callbacks import CSVLogger
-
+from keras import backend as K
 
 
 def biGRU(bs,time_steps,alphabet_size):
+        model = Sequential()
+        model.add(Embedding(alphabet_size, 32, batch_input_shape=(bs, time_steps)))
+        model.add(Bidirectional(CuDNNGRU(32, stateful=False, return_sequences=True)))
+        model.add(Bidirectional(CuDNNGRU(32, stateful=False, return_sequences=False)))
+        model.add(Dense(64, activation='relu'))
+        model.add(Dense(alphabet_size, activation='softmax'))
+        return model
+
+def biGRU_16bit(bs,time_steps,alphabet_size):
+        K.set_floatx('float16')
         model = Sequential()
         model.add(Embedding(alphabet_size, 32, batch_input_shape=(bs, time_steps)))
         model.add(Bidirectional(CuDNNGRU(32, stateful=False, return_sequences=True)))
@@ -36,7 +47,29 @@ def biLSTM(bs,time_steps,alphabet_size):
         model.add(Dense(alphabet_size, activation='softmax'))
         return model
 
+
+def biLSTM_16bit(bs,time_steps,alphabet_size):
+        K.set_floatx('float16')
+        model = Sequential()
+        model.add(Embedding(alphabet_size, 32, batch_input_shape=(bs, time_steps)))
+        model.add(Bidirectional(CuDNNLSTM(32, stateful=False, return_sequences=True)))
+        model.add(Bidirectional(CuDNNLSTM(32, stateful=False, return_sequences=False)))
+        model.add(Dense(64, activation='relu'))
+        model.add(Dense(alphabet_size, activation='softmax'))
+        return model
+
 def LSTM_multi(bs,time_steps,alphabet_size):
+        model = Sequential()
+        model.add(Embedding(alphabet_size, 32, batch_input_shape=(bs, time_steps)))
+        model.add(CuDNNLSTM(32, stateful=False, return_sequences=True))
+        model.add(CuDNNLSTM(32, stateful=False, return_sequences=True))
+        model.add(Flatten())
+        model.add(Dense(64, activation='relu'))
+        model.add(Dense(alphabet_size, activation='softmax'))
+        return model
+
+def LSTM_multi_16bit(bs,time_steps,alphabet_size):
+        K.set_floatx('float16')
         model = Sequential()
         model.add(Embedding(alphabet_size, 32, batch_input_shape=(bs, time_steps)))
         model.add(CuDNNLSTM(32, stateful=False, return_sequences=True))
@@ -56,6 +89,18 @@ def LSTM_multi_selu(bs,time_steps,alphabet_size):
         model.add(Dense(alphabet_size, activation='softmax'))
         return model
 
+def LSTM_multi_selu_16bit(bs,time_steps,alphabet_size):
+        K.set_floatx('float16')
+        model = Sequential()
+        model.add(Embedding(alphabet_size, 32, batch_input_shape=(bs, time_steps)))
+        model.add(CuDNNLSTM(32, stateful=False, return_sequences=True))
+        model.add(CuDNNLSTM(32, stateful=False, return_sequences=True))
+        model.add(Flatten())
+        init = keras.initializers.lecun_uniform(seed=0)
+        model.add(Dense(64, activation=keras.activations.selu, kernel_initializer=init))
+        model.add(Dense(alphabet_size, activation='softmax'))
+        return model
+
 def GRU_multi(bs,time_steps,alphabet_size):
         model = Sequential()
         model.add(Embedding(alphabet_size, 32, batch_input_shape=(bs, time_steps)))
@@ -65,4 +110,40 @@ def GRU_multi(bs,time_steps,alphabet_size):
         model.add(Dense(64, activation='relu'))
         model.add(Dense(alphabet_size, activation='softmax'))
         return model
-        
+
+def GRU_multi_16bit(bs,time_steps,alphabet_size):
+        K.set_floatx('float16')
+        model = Sequential()
+        model.add(Embedding(alphabet_size, 32, batch_input_shape=(bs, time_steps)))
+        model.add(CuDNNGRU(32, stateful=False, return_sequences=True))
+        model.add(CuDNNGRU(32, stateful=False, return_sequences=True))
+        model.add(Flatten())
+        model.add(Dense(64, activation='relu'))
+        model.add(Dense(alphabet_size, activation='softmax'))
+        return model
+
+
+def fullyConnected(bs,time_steps, alphabet_size):
+        model = Sequential()
+        model.add(Embedding(alphabet_size, 5, batch_input_shape=(bs, time_steps)))
+        model.add(Flatten())
+        model.add(Dense(128, activation=ELU(1.0)))
+        model.add(Dense(128, activation=ELU(1.0)))
+        model.add(Dense(128, activation=ELU(1.0)))
+        model.add(Dense(128, activation=ELU(1.0)))
+        model.add(Dense(alphabet_size, activation='softmax'))
+        return model
+
+
+def fullyConnected_16bit(bs,time_steps, alphabet_size):
+        K.set_floatx('float16')
+        model = Sequential()
+        model.add(Embedding(alphabet_size, 5, batch_input_shape=(bs, time_steps)))
+        model.add(Flatten())
+        model.add(Dense(128, activation=ELU(1.0)))
+        model.add(Dense(128, activation=ELU(1.0)))
+        model.add(Dense(128, activation=ELU(1.0)))
+        model.add(Dense(128, activation=ELU(1.0)))
+        model.add(Dense(alphabet_size, activation='softmax'))
+        return model
+
