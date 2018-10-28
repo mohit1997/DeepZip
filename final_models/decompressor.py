@@ -91,7 +91,7 @@ def predict_lstm(len_series, timesteps, bs, alphabet_size, model_name, final_ste
                         for j in range(min(num_iters,timesteps)):
                                 series_2d[i,j] = dec[i].read(cumul, alphabet_size)
                 cumul = np.zeros((bs, alphabet_size+1), dtype = np.uint64)
-                for j in tqdm(range(num_iters - timesteps)):
+                for j in (range(num_iters - timesteps)):
                         prob = model.predict(series_2d[:,j:j+timesteps], batch_size=bs)
                         cumul[:,1:] = np.cumsum(prob*10000000 + 1, axis = 1)
                         for i in range(bs):
@@ -112,7 +112,7 @@ def predict_lstm(len_series, timesteps, bs, alphabet_size, model_name, final_ste
                 cumul[1:] = np.cumsum(prob*10000000 + 1)                
                 for j in range(min(timesteps,len_series)):
                         series[j] = dec.read(cumul, alphabet_size)
-                for i in tqdm(range(len_series-timesteps)):
+                for i in (range(len_series-timesteps)):
                         prob = model.predict(series[i:i+timesteps].reshape(1,-1), batch_size=1)
                         cumul[1:] = np.cumsum(prob*10000000 + 1)
                         series[i+timesteps] = dec.read(cumul, alphabet_size)

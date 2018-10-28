@@ -135,7 +135,7 @@ def fullyConnected(bs,time_steps, alphabet_size):
         return model
 
 
-def fullyConnected_16bit(bs,time_steps, alphabet_size):
+def FC_4layer_16bit(bs,time_steps, alphabet_size):
         K.set_floatx('float16')
         model = Sequential()
         model.add(Embedding(alphabet_size, 5, batch_input_shape=(bs, time_steps)))
@@ -148,7 +148,8 @@ def fullyConnected_16bit(bs,time_steps, alphabet_size):
         return model
 
 
-def FC(bs,time_steps,alphabet_size):
+def FC_16bit(bs,time_steps,alphabet_size):
+        K.set_floatx('float16')
         model = Sequential()
         init = keras.initializers.lecun_uniform(seed=0)
         model.add(Embedding(alphabet_size, 32, batch_input_shape=(bs, time_steps)))

@@ -5,7 +5,7 @@ from keras.layers import Dense, Bidirectional
 from keras.layers import LSTM, Flatten, Conv1D, LocallyConnected1D, CuDNNLSTM, CuDNNGRU, MaxPooling1D, GlobalAveragePooling1D, GlobalMaxPooling1D
 from math import sqrt
 from keras.layers.embeddings import Embedding
-from keras.callbacks import ModelCheckpoint
+from keras.callbacks import ModelCheckpoint, EarlyStopping
 # from matplotlib import pyplot
 import keras
 from sklearn.preprocessing import OneHotEncoder
@@ -70,14 +70,15 @@ def generate_single_output_data(file_path,batch_size,time_steps):
         
 def fit_model(X, Y, bs, nb_epoch, model):
         y = Y
-        optim = keras.optimizers.Adam(lr=1e-3, beta_1=0.9, beta_2=0.999, epsilon=1e-3, decay=0, amsgrad=False)
+        optim = keras.optimizers.Adam(lr=1e-3, beta_1=0.9, beta_2=0.999, epsilon=5e-3, decay=0, amsgrad=False)
         model.compile(loss=loss_fn, optimizer=optim)
         checkpoint = ModelCheckpoint(arguments.name, monitor='loss', verbose=1, save_best_only=True, mode='min', save_weights_only=True)
         csv_logger = CSVLogger(arguments.log_file, append=True, separator=';')
-        callbacks_list = [checkpoint, csv_logger]
-        for i in range(nb_epoch):
-                model.fit(X, y, epochs=1, batch_size=bs, verbose=1, shuffle=True, callbacks=callbacks_list)
-                model.reset_states()
+        early_stopping = EarlyStopping(monitor='loss', mode='min', min_delta=0.005, patience=1, verbose=1)
+
+        callbacks_list = [checkpoint, csv_logger, early_stopping]
+        #callbacks_list = [checkpoint, csv_logger]
+        model.fit(X, y, epochs=nb_epoch, batch_size=bs, verbose=1, shuffle=True, callbacks=callbacks_list)
  
 
                 

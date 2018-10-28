@@ -18,27 +18,27 @@ do
     echo $basename
 
     # Storing the model
-    echo "Starting training ..."
     mkdir -p "$model_dir/$basename"
     model_file="$model_dir/$basename/$1.hdf5"
     log_file="$logs_dir/$basename/$1.log.csv"
     mkdir -p "$model_dir/$basename"
     mkdir -p "$logs_dir/$basename" 
+    echo "Starting training ..." | tee -a $log_file
     
     python trainer.py -model_name $1 -d $f -gpu $2 -name $model_file -log_file $log_file 
     
     
     # Perform Compression
-    echo "Starting Compression ..."
+    echo "Starting Compression ..." | tee -a $log_file
     params_file="$data_dir/$basename.param.json"
     echo $params_file
     output_dir="$compressed_dir/$basename"
     output_prefix="$output_dir/$1.compressed"
     mkdir -p "$output_dir"
-    #time python compressor.py -data $f -data_params $params_file -model $model_file -model_name $1 -output $output_prefix -batch_size 10000 2>&1 | tee $log_file 
-    #recon_file_name="$output_dir/$1.reconstructed.txt"
-    #time python decompressor.py -output $recon_file_name -model $model_file -model_name $1 -input_file_prefix $output_prefix -batch_size 10000 2>&1 | tee $log_file
-    #diff $recon_file_name "$original_dir/$basename.txt" > $log_file
+    /usr/bin/time -v python compressor.py -data $f -data_params $params_file -model $model_file -model_name $1 -output $output_prefix -batch_size 10000 2>&1 | tee -a $log_file 
+    recon_file_name="$output_dir/$1.reconstructed.txt"
+    /usr/bin/time -v python decompressor.py -output $recon_file_name -model $model_file -model_name $1 -input_file_prefix $output_prefix -batch_size 10000 2>&1 | tee -a $log_file
+    diff $recon_file_name "$original_dir/$basename.txt" >> $log_file
     #echo "- - - - - "
 done
 

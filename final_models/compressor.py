@@ -84,7 +84,7 @@ def predict_lstm(X, y, y_original, timesteps, bs, alphabet_size, model_name, fin
                         for j in range(min(timesteps, num_iters)):
                                 enc[i].write(cumul, X[ind[i],j])
                 cumul = np.zeros((bs, alphabet_size+1), dtype = np.uint64)
-                for j in tqdm(range(num_iters - timesteps)):
+                for j in (range(num_iters - timesteps)):
                         prob = model.predict(X[ind,:], batch_size=bs)
                         cumul[:,1:] = np.cumsum(prob*10000000 + 1, axis = 1)
                         for i in range(bs):
@@ -105,7 +105,7 @@ def predict_lstm(X, y, y_original, timesteps, bs, alphabet_size, model_name, fin
 
                 for j in range(timesteps):
                         enc.write(cumul, X[0,j])
-                for i in tqdm(range(len(X))):
+                for i in (range(len(X))):
                         prob = model.predict(X[i,:].reshape(1,-1), batch_size=1)
                         cumul[1:] = np.cumsum(prob*10000000 + 1)
                         enc.write(cumul, y_original[i][0])
