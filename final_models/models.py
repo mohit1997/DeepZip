@@ -147,3 +147,13 @@ def fullyConnected_16bit(bs,time_steps, alphabet_size):
         model.add(Dense(alphabet_size, activation='softmax'))
         return model
 
+
+def FC(bs,time_steps,alphabet_size):
+        model = Sequential()
+        init = keras.initializers.lecun_uniform(seed=0)
+        model.add(Embedding(alphabet_size, 32, batch_input_shape=(bs, time_steps)))
+        model.add(Flatten())
+        model.add(Dense(1024, activation='relu', kernel_initializer=init))
+        model.add(Dense(64, activation='relu', kernel_initializer=init))
+        model.add(Dense(alphabet_size, activation='softmax'))
+        return model
