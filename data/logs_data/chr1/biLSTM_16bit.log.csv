@@ -53,3 +53,32 @@ totalMemory: 11.91GiB freeMemory: 11.75GiB
 2018-10-30 06:19:28.425793: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977]      0 
 2018-10-30 06:19:28.425803: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990] 0:   N 
 2018-10-30 06:19:28.426226: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1103] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 11372 MB memory) -> physical GPU (device: 0, name: TITAN X (Pascal), pci bus id: 0000:09:00.0, compute capability: 6.1)
+/opt/conda/lib/python3.6/site-packages/sklearn/externals/joblib/externals/cloudpickle/cloudpickle.py:47: DeprecationWarning: the imp module is deprecated in favour of importlib; see the module's documentation for alternative uses
+  import imp
+Using TensorFlow backend.
+{'0': 'A', '1': 'C', '2': 'T', '3': 'G', '4': 'N'}
+[4 4 4 4 4 4 4 4 4 4]
+	Command being timed: "python decompressor.py -output ../data/compressed/chr1/biLSTM_16bit.reconstructed.txt -model ../data/trained_models/chr1/biLSTM_16bit.hdf5 -model_name biLSTM_16bit -input_file_prefix ../data/compressed/chr1/biLSTM_16bit.compressed -batch_size 10000"
+	User time (seconds): 3669.25
+	System time (seconds): 281.47
+	Percent of CPU this job got: 103%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:03:29
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 4522516
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 4553072
+	Voluntary context switches: 10745560
+	Involuntary context switches: 8027
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 566840
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+../data/compressed/chr1/biLSTM_16bit.reconstructed.txt ../data/files_to_be_compressed/chr1.txt differ: char 65, line 1
