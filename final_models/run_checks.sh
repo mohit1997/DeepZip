@@ -10,7 +10,7 @@ echo "filename,file_length,model,model-size,compressed-size,total-size,status" >
 
 for f in $data_dir/*.npy 
 do
-    for m in "biLSTM_16bit" "biGRU_16bit" "LSTM_multi_16bit" "GRU_multi_16bit" "FC_16bit" "FC_4layer_16bit"
+    for m in "biLSTM_16bit" "biGRU" "biGRU_16bit" "LSTM_multi" "FC" "FC_4layer" "LSTM_multi_16bit" "GRU_multi_16bit" "FC_16bit" "FC_4layer_16bit"
     do
         echo $f
         s=${f##*/}

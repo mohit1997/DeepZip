@@ -1,0 +1,160 @@
+Starting training ...
+Starting Compression ...
+/opt/conda/lib/python3.6/site-packages/sklearn/externals/joblib/externals/cloudpickle/cloudpickle.py:47: DeprecationWarning: the imp module is deprecated in favour of importlib; see the module's documentation for alternative uses
+  import imp
+Using TensorFlow backend.
+/opt/conda/lib/python3.6/site-packages/sklearn/preprocessing/_encoders.py:363: FutureWarning: The handling of integer data will change in version 0.22. Currently, the categories are determined based on the range [0, max(values)], while in the future they will be determined based on the unique values.
+If you want the future behaviour and silence this warning, you can specify "categories='auto'".
+In case you used a LabelEncoder before this OneHotEncoder to convert the categories to integers, then you can now use the OneHotEncoder directly.
+  warnings.warn(msg, FutureWarning)
+Traceback (most recent call last):
+  File "compressor.py", line 202, in <module>
+    main()
+  File "compressor.py", line 164, in main
+    predict_lstm(X, Y, Y_original, timesteps, batch_size, alphabet_size, args.model_name)
+  File "compressor.py", line 68, in predict_lstm
+    model = getattr(models, model_name)(bs, timesteps, alphabet_size)
+  File "/data/final_models/models.py", line 165, in FC
+    model = sequential()
+NameError: name 'sequential' is not defined
+Command exited with non-zero status 1
+	Command being timed: "python compressor.py -data ../data/processed_files/HMM40.npy -data_params ../data/processed_files/HMM40.param.json -model ../data/trained_models/HMM40/FC.hdf5 -model_name FC -output ../data/compressed/HMM40/FC.compressed -batch_size 10000"
+	User time (seconds): 13.61
+	System time (seconds): 2.51
+	Percent of CPU this job got: 282%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:05.70
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1017304
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 740198
+	Voluntary context switches: 247
+	Involuntary context switches: 111
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 16
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+/opt/conda/lib/python3.6/site-packages/sklearn/externals/joblib/externals/cloudpickle/cloudpickle.py:47: DeprecationWarning: the imp module is deprecated in favour of importlib; see the module's documentation for alternative uses
+  import imp
+Using TensorFlow backend.
+Traceback (most recent call last):
+  File "decompressor.py", line 184, in <module>
+    main()
+  File "decompressor.py", line 153, in main
+    f = open(args.input_file_prefix+'.combined','rb')
+FileNotFoundError: [Errno 2] No such file or directory: '../data/compressed/HMM40/FC.compressed.combined'
+Command exited with non-zero status 1
+	Command being timed: "python decompressor.py -output ../data/compressed/HMM40/FC.reconstructed.txt -model ../data/trained_models/HMM40/FC.hdf5 -model_name FC -input_file_prefix ../data/compressed/HMM40/FC.compressed -batch_size 10000"
+	User time (seconds): 2.15
+	System time (seconds): 0.25
+	Percent of CPU this job got: 100%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:02.41
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 254040
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 68272
+	Voluntary context switches: 32
+	Involuntary context switches: 9
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 8
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
+Starting training ...
+0;0.47265591356489395
+1;0.46978319317514444
+2;0.469492779270051
+3;0.4693358628064989
+Starting Compression ...
+2018-11-01 04:18:19.100549: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2018-11-01 04:18:21.697124: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1411] Found device 0 with properties: 
+name: TITAN X (Pascal) major: 6 minor: 1 memoryClockRate(GHz): 1.531
+pciBusID: 0000:08:00.0
+totalMemory: 11.91GiB freeMemory: 11.75GiB
+2018-11-01 04:18:21.697185: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1490] Adding visible gpu devices: 0
+2018-11-01 04:18:22.029746: I tensorflow/core/common_runtime/gpu/gpu_device.cc:971] Device interconnect StreamExecutor with strength 1 edge matrix:
+2018-11-01 04:18:22.029818: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977]      0 
+2018-11-01 04:18:22.029826: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990] 0:   N 
+2018-11-01 04:18:22.030216: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1103] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 11372 MB memory) -> physical GPU (device: 0, name: TITAN X (Pascal), pci bus id: 0000:08:00.0, compute capability: 6.1)
+/opt/conda/lib/python3.6/site-packages/sklearn/externals/joblib/externals/cloudpickle/cloudpickle.py:47: DeprecationWarning: the imp module is deprecated in favour of importlib; see the module's documentation for alternative uses
+  import imp
+Using TensorFlow backend.
+/opt/conda/lib/python3.6/site-packages/sklearn/preprocessing/_encoders.py:363: FutureWarning: The handling of integer data will change in version 0.22. Currently, the categories are determined based on the range [0, max(values)], while in the future they will be determined based on the unique values.
+If you want the future behaviour and silence this warning, you can specify "categories='auto'".
+In case you used a LabelEncoder before this OneHotEncoder to convert the categories to integers, then you can now use the OneHotEncoder directly.
+  warnings.warn(msg, FutureWarning)
+	Command being timed: "python compressor.py -data ../data/processed_files/HMM40.npy -data_params ../data/processed_files/HMM40.param.json -model ../data/trained_models/HMM40/FC.hdf5 -model_name FC -output ../data/compressed/HMM40/FC.compressed -batch_size 10000"
+	User time (seconds): 99.07
+	System time (seconds): 9.33
+	Percent of CPU this job got: 112%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:36.69
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1660496
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 1155068
+	Voluntary context switches: 94997
+	Involuntary context switches: 401
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 81280
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+2018-11-01 04:19:52.909380: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2018-11-01 04:19:55.602068: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1411] Found device 0 with properties: 
+name: TITAN X (Pascal) major: 6 minor: 1 memoryClockRate(GHz): 1.531
+pciBusID: 0000:08:00.0
+totalMemory: 11.91GiB freeMemory: 11.75GiB
+2018-11-01 04:19:55.602114: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1490] Adding visible gpu devices: 0
+2018-11-01 04:19:55.969954: I tensorflow/core/common_runtime/gpu/gpu_device.cc:971] Device interconnect StreamExecutor with strength 1 edge matrix:
+2018-11-01 04:19:55.970027: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977]      0 
+2018-11-01 04:19:55.970038: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990] 0:   N 
+2018-11-01 04:19:55.970453: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1103] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 11372 MB memory) -> physical GPU (device: 0, name: TITAN X (Pascal), pci bus id: 0000:08:00.0, compute capability: 6.1)
+/opt/conda/lib/python3.6/site-packages/sklearn/externals/joblib/externals/cloudpickle/cloudpickle.py:47: DeprecationWarning: the imp module is deprecated in favour of importlib; see the module's documentation for alternative uses
+  import imp
+Using TensorFlow backend.
+{'0': 'a', '1': 'b'}
+[1 0 0 1 0 0 1 1 0 1]
+	Command being timed: "python decompressor.py -output ../data/compressed/HMM40/FC.reconstructed.txt -model ../data/trained_models/HMM40/FC.hdf5 -model_name FC -input_file_prefix ../data/compressed/HMM40/FC.compressed -batch_size 10000"
+	User time (seconds): 147.64
+	System time (seconds): 7.67
+	Percent of CPU this job got: 102%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 2:30.89
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 1491132
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 556319
+	Voluntary context switches: 95615
+	Involuntary context switches: 751
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 99552
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

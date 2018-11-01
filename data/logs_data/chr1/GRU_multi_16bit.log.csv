@@ -81,3 +81,5 @@ Using TensorFlow backend.
 	Page size (bytes): 4096
 	Exit status: 0
 ../data/compressed/chr1/GRU_multi_16bit.reconstructed.txt ../data/files_to_be_compressed/chr1.txt differ: char 65, line 1
+Starting training ...
+0;1.8801644416216805

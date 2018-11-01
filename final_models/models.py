@@ -123,16 +123,6 @@ def GRU_multi_16bit(bs,time_steps,alphabet_size):
         return model
 
 
-def fullyConnected(bs,time_steps, alphabet_size):
-        model = Sequential()
-        model.add(Embedding(alphabet_size, 5, batch_input_shape=(bs, time_steps)))
-        model.add(Flatten())
-        model.add(Dense(128, activation=ELU(1.0)))
-        model.add(Dense(128, activation=ELU(1.0)))
-        model.add(Dense(128, activation=ELU(1.0)))
-        model.add(Dense(128, activation=ELU(1.0)))
-        model.add(Dense(alphabet_size, activation='softmax'))
-        return model
 
 
 def FC_4layer_16bit(bs,time_steps, alphabet_size):
@@ -147,9 +137,31 @@ def FC_4layer_16bit(bs,time_steps, alphabet_size):
         model.add(Dense(alphabet_size, activation='softmax'))
         return model
 
+def FC_4layer(bs,time_steps, alphabet_size):
+        model = Sequential()
+        model.add(Embedding(alphabet_size, 5, batch_input_shape=(bs, time_steps)))
+        model.add(Flatten())
+        model.add(Dense(128, activation=ELU(1.0)))
+        model.add(Dense(128, activation=ELU(1.0)))
+        model.add(Dense(128, activation=ELU(1.0)))
+        model.add(Dense(128, activation=ELU(1.0)))
+        model.add(Dense(alphabet_size, activation='softmax'))
+        return model
+
 
 def FC_16bit(bs,time_steps,alphabet_size):
-        K.set_floatx('float16')
+        k.set_floatx('float16')
+        model = Sequential()
+        init = keras.initializers.lecun_uniform(seed=0)
+        model.add(embedding(alphabet_size, 32, batch_input_shape=(bs, time_steps)))
+        model.add(flatten())
+        model.add(dense(1024, activation='relu', kernel_initializer=init))
+        model.add(dense(64, activation='relu', kernel_initializer=init))
+        model.add(dense(alphabet_size, activation='softmax'))
+        return model
+
+
+def FC(bs,time_steps,alphabet_size):
         model = Sequential()
         init = keras.initializers.lecun_uniform(seed=0)
         model.add(Embedding(alphabet_size, 32, batch_input_shape=(bs, time_steps)))
@@ -158,3 +170,4 @@ def FC_16bit(bs,time_steps,alphabet_size):
         model.add(Dense(64, activation='relu', kernel_initializer=init))
         model.add(Dense(alphabet_size, activation='softmax'))
         return model
+

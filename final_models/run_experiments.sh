@@ -23,10 +23,19 @@ do
     log_file="$logs_dir/$basename/$1.log.csv"
     output_dir="$compressed_dir/$basename"
     recon_file_name="$output_dir/$1.reconstructed.txt"
-    if [ -f $recon_file_name ]; then
-        continue
+    params_file="$data_dir/$basename.param.json"
+    echo $params_file
+    output_prefix="$output_dir/$1.compressed"
+    mkdir -p "$output_dir"
+    cmp $recon_file_name "$original_dir/$basename.txt"
+    status=$?
+    
+    echo $status
+    
+    if cmp $recon_file_name "$original_dir/$basename.txt"; then
+        continue 
     else
-        echo "continuing with the loop"
+        echo "continuing"
     fi
 
     mkdir -p "$model_dir/$basename"
@@ -38,10 +47,6 @@ do
     
     # Perform Compression
     echo "Starting Compression ..." | tee -a $log_file
-    params_file="$data_dir/$basename.param.json"
-    echo $params_file
-    output_prefix="$output_dir/$1.compressed"
-    mkdir -p "$output_dir"
     /usr/bin/time -v python compressor.py -data $f -data_params $params_file -model $model_file -model_name $1 -output $output_prefix -batch_size 10000 2>&1 | tee -a $log_file 
     /usr/bin/time -v python decompressor.py -output $recon_file_name -model $model_file -model_name $1 -input_file_prefix $output_prefix -batch_size 10000 2>&1 | tee -a $log_file
     cmp $recon_file_name "$original_dir/$basename.txt" >> $log_file

@@ -82,3 +82,6 @@ Using TensorFlow backend.
 	Page size (bytes): 4096
 	Exit status: 0
 ../data/compressed/chr1/biLSTM_16bit.reconstructed.txt ../data/files_to_be_compressed/chr1.txt differ: char 65, line 1
+Starting training ...
+0;2.118500929380916
+1;2.0358651252154303

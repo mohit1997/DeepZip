@@ -88,3 +88,8 @@ Using TensorFlow backend.
 	Page size (bytes): 4096
 	Exit status: 0
 ../data/compressed/Caenorhabditis_elegans.WBcel235.dna.toplevel/FC_16bit.reconstructed.txt ../data/files_to_be_compressed/Caenorhabditis_elegans.WBcel235.dna.toplevel.txt differ: char 67, line 1
+Starting training ...
+Starting training ...
+0;1.9390477221818043
+1;1.9382117284423341
+2;1.9381261227950937

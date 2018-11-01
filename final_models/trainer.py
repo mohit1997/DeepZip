@@ -70,11 +70,11 @@ def generate_single_output_data(file_path,batch_size,time_steps):
         
 def fit_model(X, Y, bs, nb_epoch, model):
         y = Y
-        optim = keras.optimizers.Adam(lr=1e-3, beta_1=0.9, beta_2=0.999, epsilon=5e-3, decay=0, amsgrad=False)
+        optim = keras.optimizers.Adam(lr=1e-3, beta_1=0.9, beta_2=0.999, epsilon=1e-8, decay=0, amsgrad=False)
         model.compile(loss=loss_fn, optimizer=optim)
         checkpoint = ModelCheckpoint(arguments.name, monitor='loss', verbose=1, save_best_only=True, mode='min', save_weights_only=True)
         csv_logger = CSVLogger(arguments.log_file, append=True, separator=';')
-        early_stopping = EarlyStopping(monitor='loss', mode='min', min_delta=0.005, patience=1, verbose=1)
+        early_stopping = EarlyStopping(monitor='loss', mode='min', min_delta=0.005, patience=3, verbose=1)
 
         callbacks_list = [checkpoint, csv_logger, early_stopping]
         #callbacks_list = [checkpoint, csv_logger]
