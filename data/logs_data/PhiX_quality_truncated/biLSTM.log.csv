@@ -1,0 +1,30 @@
+Starting training ...
+Starting Compression ...
+Traceback (most recent call last):
+  File "decompressor.py", line 20, in <module>
+    import keras
+ImportError: No module named keras
+Command exited with non-zero status 1
+	Command being timed: "python decompressor.py -output ../data/compressed/PhiX_quality_truncated/biLSTM.reconstructed.txt -model ../data/trained_models/PhiX_quality_truncated/biLSTM.hdf5 -model_name biLSTM -input_file_prefix ../data/compressed/PhiX_quality_truncated/biLSTM.compressed -batch_size 10000"
+	User time (seconds): 1.25
+	System time (seconds): 3.24
+	Percent of CPU this job got: 1273%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:00.35
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 57524
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 14625
+	Voluntary context switches: 141
+	Involuntary context switches: 360499
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 0
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 1
