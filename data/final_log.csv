@@ -1,6 +1,10 @@
 filename,file_length,model,model-size,compressed-size,total-size,status
 Caenorhabditis_elegans.WBcel235.dna.chromosome.I,15072434,biLSTM_16bit,120272,3535043,3655315,0
+Caenorhabditis_elegans.WBcel235.dna.chromosome.I,15072434,biGRU,170512,3441972,3612484,0
 Caenorhabditis_elegans.WBcel235.dna.chromosome.I,15072434,biGRU_16bit,98560,3536457,3635017,0
+Caenorhabditis_elegans.WBcel235.dna.chromosome.I,15072434,LSTM_multi,614616,3401681,4016297,0
+Caenorhabditis_elegans.WBcel235.dna.chromosome.I,15072434,FC,8674080,3379189,12053269,0
+Caenorhabditis_elegans.WBcel235.dna.chromosome.I,15072434,FC_4layer,390328,3453831,3844159,0
 Caenorhabditis_elegans.WBcel235.dna.chromosome.I,15072434,LSTM_multi_16bit,317656,3503449,3821105,0
 Caenorhabditis_elegans.WBcel235.dna.chromosome.I,15072434,GRU_multi_16bit,309464,3497453,3806917,0
 Caenorhabditis_elegans.WBcel235.dna.chromosome.I,15072434,FC_16bit,4346656,3410094,7756750,0
