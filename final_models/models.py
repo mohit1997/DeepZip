@@ -83,6 +83,16 @@ def LSTM_multi_big(bs,time_steps,alphabet_size):
         model.add(CuDNNLSTM(64, stateful=False, return_sequences=True))
         model.add(CuDNNLSTM(64, stateful=False, return_sequences=True))
         model.add(Flatten())
+        model.add(Dense(alphabet_size, activation='softmax'))
+        return model
+
+def LSTM_multi_bn(bs,time_steps,alphabet_size):
+        model = Sequential()
+        model.add(Embedding(alphabet_size, 32, batch_input_shape=(bs, time_steps)))
+        model.add(CuDNNLSTM(32, stateful=False, return_sequences=True))
+        model.add(CuDNNLSTM(32, stateful=False, return_sequences=True))
+        model.add(Flatten())
+        model.add(BatchNormalization())
         model.add(Dense(64, activation='relu'))
         model.add(Dense(alphabet_size, activation='softmax'))
         return model
