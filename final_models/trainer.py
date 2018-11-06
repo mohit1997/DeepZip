@@ -88,7 +88,7 @@ print(arguments)
 
 batch_size=1024
 sequence_length=64
-num_epochs=10
+num_epochs=20
 
 X,Y = generate_single_output_data(arguments.data,batch_size, sequence_length)
 model = getattr(models, arguments.model_name)(batch_size, sequence_length, Y.shape[1])
