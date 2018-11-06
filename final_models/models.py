@@ -28,6 +28,15 @@ def biGRU(bs,time_steps,alphabet_size):
         model.add(Dense(alphabet_size, activation='softmax'))
         return model
 
+def biGRU_big(bs,time_steps,alphabet_size):
+        model = Sequential()
+        model.add(Embedding(alphabet_size, 32, batch_input_shape=(bs, time_steps)))
+        model.add(Bidirectional(CuDNNGRU(128, stateful=False, return_sequences=True)))
+        model.add(Bidirectional(CuDNNGRU(128, stateful=False, return_sequences=False)))
+#        model.add(Dense(64, activation='relu'))
+        model.add(Dense(alphabet_size, activation='softmax'))
+        return model
+
 def biGRU_16bit(bs,time_steps,alphabet_size):
         K.set_floatx('float16')
         model = Sequential()
@@ -63,6 +72,16 @@ def LSTM_multi(bs,time_steps,alphabet_size):
         model.add(Embedding(alphabet_size, 32, batch_input_shape=(bs, time_steps)))
         model.add(CuDNNLSTM(32, stateful=False, return_sequences=True))
         model.add(CuDNNLSTM(32, stateful=False, return_sequences=True))
+        model.add(Flatten())
+        model.add(Dense(64, activation='relu'))
+        model.add(Dense(alphabet_size, activation='softmax'))
+        return model
+
+def LSTM_multi_big(bs,time_steps,alphabet_size):
+        model = Sequential()
+        model.add(Embedding(alphabet_size, 64, batch_input_shape=(bs, time_steps)))
+        model.add(CuDNNLSTM(64, stateful=False, return_sequences=True))
+        model.add(CuDNNLSTM(64, stateful=False, return_sequences=True))
         model.add(Flatten())
         model.add(Dense(64, activation='relu'))
         model.add(Dense(alphabet_size, activation='softmax'))
@@ -111,6 +130,15 @@ def GRU_multi(bs,time_steps,alphabet_size):
         model.add(Dense(alphabet_size, activation='softmax'))
         return model
 
+def GRU_multi_big(bs,time_steps,alphabet_size):
+        model = Sequential()
+        model.add(Embedding(alphabet_size, 32, batch_input_shape=(bs, time_steps)))
+        model.add(CuDNNGRU(128, stateful=False, return_sequences=True))
+        model.add(CuDNNGRU(128, stateful=False, return_sequences=True))
+        model.add(Flatten())
+        model.add(Dense(alphabet_size, activation='softmax'))
+        return model
+
 def GRU_multi_16bit(bs,time_steps,alphabet_size):
         K.set_floatx('float16')
         model = Sequential()
@@ -148,6 +176,16 @@ def FC_4layer(bs,time_steps, alphabet_size):
         model.add(Dense(alphabet_size, activation='softmax'))
         return model
 
+def FC_4layer_big(bs,time_steps, alphabet_size):
+        model = Sequential()
+        model.add(Embedding(alphabet_size, 32, batch_input_shape=(bs, time_steps)))
+        model.add(Flatten())
+        model.add(Dense(128, activation=ELU(1.0)))
+        model.add(Dense(128, activation=ELU(1.0)))
+        model.add(Dense(128, activation=ELU(1.0)))
+        model.add(Dense(128, activation=ELU(1.0)))
+        model.add(Dense(alphabet_size, activation='softmax'))
+        return model
 
 def FC_16bit(bs,time_steps,alphabet_size):
         k.set_floatx('float16')
