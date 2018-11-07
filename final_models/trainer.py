@@ -86,11 +86,12 @@ def fit_model(X, Y, bs, nb_epoch, model):
 arguments = parser.parse_args()
 print(arguments)
 
-batch_size=1024
+batch_size=128
 sequence_length=64
 num_epochs=20
 
 X,Y = generate_single_output_data(arguments.data,batch_size, sequence_length)
+print(Y.shape[1])
 model = getattr(models, arguments.model_name)(batch_size, sequence_length, Y.shape[1])
 fit_model(X, Y, batch_size,num_epochs , model)
 

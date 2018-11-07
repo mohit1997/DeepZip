@@ -13,7 +13,7 @@ parser.add_argument('-output', action='store',dest='output_file_path',
                     help='output file path', default='npwik8')
 args = parser.parse_args()
 
-f = io.open("enwik8", mode="r", encoding="utf-8")
+f = io.open(args.input_file_path, mode="r", encoding="utf-8")
 data = f.read()
 
 print(len(data))
