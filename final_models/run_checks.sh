@@ -21,7 +21,7 @@ do
     bsc_file_size=$(stat --printf="%s" "test.bsc")
     
     
-    for m in "biLSTM_16bit" "biGRU" "biGRU_big" "biGRU_16bit" "LSTM_multi" "LSTM_multi_big" "FC" "FC_4layer" "LSTM_multi_16bit" "GRU_multi_16bit" "FC_16bit" "FC_4layer_16bit"
+    for m in "biLSTM_16bit" "biGRU" "biGRU_big" "biGRU_16bit" "LSTM_multi" "LSTM_multi_bn" "LSTM_multi_big" "FC" "FC_4layer" "LSTM_multi_16bit" "GRU_multi_16bit" "FC_16bit" "FC_4layer_16bit"
     do
          
         model_file="$model_dir/$basename/$m.hdf5"

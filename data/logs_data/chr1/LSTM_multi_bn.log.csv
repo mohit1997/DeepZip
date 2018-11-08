@@ -1,0 +1,16 @@
+Starting training ...
+0;1.5841035655786653
+1;1.5857022070768279
+2;1.631261938929875
+3;1.8869552158110248
+Starting Compression ...
+2018-11-08 17:09:52.919536: I tensorflow/core/platform/cpu_feature_guard.cc:141] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2 FMA
+2018-11-08 17:09:55.922492: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1411] Found device 0 with properties: 
+name: TITAN X (Pascal) major: 6 minor: 1 memoryClockRate(GHz): 1.531
+pciBusID: 0000:09:00.0
+totalMemory: 11.91GiB freeMemory: 11.75GiB
+2018-11-08 17:09:55.922535: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1490] Adding visible gpu devices: 0
+2018-11-08 17:09:56.229420: I tensorflow/core/common_runtime/gpu/gpu_device.cc:971] Device interconnect StreamExecutor with strength 1 edge matrix:
+2018-11-08 17:09:56.229489: I tensorflow/core/common_runtime/gpu/gpu_device.cc:977]      0 
+2018-11-08 17:09:56.229498: I tensorflow/core/common_runtime/gpu/gpu_device.cc:990] 0:   N 
+2018-11-08 17:09:56.229900: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1103] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 11372 MB memory) -> physical GPU (device: 0, name: TITAN X (Pascal), pci bus id: 0000:09:00.0, compute capability: 6.1)
