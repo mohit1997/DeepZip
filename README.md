@@ -1,4 +1,4 @@
-# DNA_Compression
+# DeepZip
 
 ## Description
 DNA_compression using neural networks
