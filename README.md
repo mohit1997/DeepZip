@@ -1,7 +1,9 @@
 # DeepZip
 
+This is the Dev directory, which is being actively updated. The training files for datasets can be found here. 
 ## Description
 DNA_compression using neural networks
+
 
 Note: [Link](https://www.dropbox.com/s/88ozf33cqsemzah/reference.npy?dl=0) for DNA Data.
 
