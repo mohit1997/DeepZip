@@ -47,8 +47,8 @@ do
     
     # Perform Compression
     echo "Starting Compression ..." | tee -a $log_file
-    /usr/bin/time -v python compressor.py -data $f -data_params $params_file -model $model_file -model_name $1 -output $output_prefix -batch_size 10000 2>&1 | tee -a $log_file 
-    /usr/bin/time -v python decompressor.py -output $recon_file_name -model $model_file -model_name $1 -input_file_prefix $output_prefix -batch_size 10000 2>&1 | tee -a $log_file
+    /usr/bin/time -v python compressor.py -data $f -data_params $params_file -model $model_file -model_name $1 -output $output_prefix -batch_size 1000 2>&1 | tee -a $log_file 
+    /usr/bin/time -v python decompressor.py -output $recon_file_name -model $model_file -model_name $1 -input_file_prefix $output_prefix -batch_size 1000 2>&1 | tee -a $log_file
     cmp $recon_file_name "$original_dir/$basename.txt" >> $log_file
     #echo "- - - - - "
 done
