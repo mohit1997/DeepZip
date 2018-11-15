@@ -3,7 +3,7 @@ data_dir="files_to_be_compressed"
 processed_dir="processed_files"
 
 
-for f in $data_dir/xor60.txt
+for f in $data_dir
 do
     echo "filename: "$f
     s=${f##*/}
