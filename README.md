@@ -3,21 +3,22 @@
 ## Description
 DNA_compression using neural networks
 
+This branch is the non-GPU implementation of deepzip.
+*WARNING* The training is significantly slower on a CPU and the code will take significant longer than reporterd in the manuscript. 
+The code has been tested on macOS Mojave. Please file an issue if there are problems.
 
 ## Requirements
-0. GPU, nvidia-docker
 1. python 2/3
 2. numpy
 3. sklearn
 4. keras 2.2.2
 5. tensorflow (cpu/gpu) 1.8
 
-(nvidia-docker is currently required to run the code)
 A simple way to install and run is to use the docker files provided:
 
 ```bash
 cd docker
-make bash BACKEND=tensorflow GPU=0 DATA=/path/to/data/
+make bash BACKEND=tensorflow DATA=/path/to/data/
 ```
 
 ## Code
