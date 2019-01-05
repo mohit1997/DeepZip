@@ -1,28 +1,25 @@
-# 
+#
 # Compression application using adaptive arithmetic coding
-# 
+#
 # Usage: python adaptive-arithmetic-compress.py InputFile OutputFile
 # Then use the corresponding adaptive-arithmetic-decompress.py application to recreate the original input file.
 # Note that the application starts with a flat frequency table of 257 symbols (all set to a frequency of 1),
 # and updates it after each byte encoded. The corresponding decompressor program also starts with a flat
 # frequency table and updates it after each byte decoded. It is by design that the compressor and
 # decompressor have synchronized states, so that the data can be decompressed properly.
-# 
+#
 # Copyright (c) Project Nayuki
-# 
+#
 # https://www.nayuki.io/page/reference-arithmetic-coding
 # https://github.com/nayuki/Reference-arithmetic-coding
 #
- 
+
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import OneHotEncoder
 import keras
-from keras.models import Sequential
 from keras.models import model_from_json
 from keras.layers import Dense
-from keras.layers import LSTM, Flatten, CuDNNLSTM
-from keras.layers.embeddings import Embedding
 from keras.models import load_model
 from keras.layers.normalization import BatchNormalization
 import tensorflow as tf
@@ -70,12 +67,12 @@ def create_data(rows, p=0.5):
         data = np.random.choice(2, rows, p=[p, 1-p])
         print(np.sum(data))/np.float32(len(data))
         return data
- 
+
 
 def predict_lstm(len_series, timesteps, bs, alphabet_size, model_name, final_step=False):
         model = getattr(models, model_name)(bs, timesteps, alphabet_size)
         model.load_weights(args.model_weights_file)
-        
+
         if not final_step:
                 num_iters = int((len_series)/bs)
                 series_2d = np.zeros((bs,num_iters), dtype = np.uint8)
@@ -86,7 +83,7 @@ def predict_lstm(len_series, timesteps, bs, alphabet_size, model_name, final_ste
                 dec = [arithmeticcoding_fast.ArithmeticDecoder(32, bitin[i]) for i in range(bs)]
                 prob = np.ones(alphabet_size)/alphabet_size
                 cumul = np.zeros(alphabet_size+1, dtype = np.uint64)
-                cumul[1:] = np.cumsum(prob*10000000 + 1)                
+                cumul[1:] = np.cumsum(prob*10000000 + 1)
                 for i in range(bs):
                         for j in range(min(num_iters,timesteps)):
                                 series_2d[i,j] = dec[i].read(cumul, alphabet_size)
@@ -107,9 +104,9 @@ def predict_lstm(len_series, timesteps, bs, alphabet_size, model_name, final_ste
                 bitin = arithmeticcoding_fast.BitInputStream(f)
                 dec = arithmeticcoding_fast.ArithmeticDecoder(32, bitin)
                 prob = np.ones(alphabet_size)/alphabet_size
- 
+
                 cumul = np.zeros(alphabet_size+1, dtype = np.uint64)
-                cumul[1:] = np.cumsum(prob*10000000 + 1)                
+                cumul[1:] = np.cumsum(prob*10000000 + 1)
                 for j in range(min(timesteps,len_series)):
                         series[j] = dec.read(cumul, alphabet_size)
                 for i in (range(len_series-timesteps)):
@@ -170,10 +167,10 @@ def main():
         #series[:l] = predict_lstm(l, timesteps, batch_size)
         alphabet_size = len(id2char_dict)
         series[:l] = predict_lstm(l, timesteps, batch_size, alphabet_size, args.model_name)
-        
+
         if l < len_series:
                 series[l:] = predict_lstm(len_series - l, timesteps, 1, alphabet_size, args.model_name, final_step = True)
-        
+
         f = open(args.output_file_name,'w')
         print(id2char_dict)
         print(series[:10])
@@ -208,13 +205,13 @@ if __name__ == "__main__":
 #       if len(args) != 1:
 #               sys.exit("Usage: python adaptive-arithmetic-compress.py OutputFile")
 #       outputfile,  = args
-#       
+#
 #       # Perform file compression
 #       data = np.load('chr1.npy').astype(np.int32)
 #       with contextlib.closing(arithmeticcoding.BitOutputStream(open(outputfile, "wb"))) as bitout:
 #               compress(data, bitout)
 #
-#       
+#
 #
 #
 #

@@ -1,28 +1,25 @@
-# 
+#
 # Compression application using adaptive arithmetic coding
-# 
+#
 # Usage: python adaptive-arithmetic-compress.py InputFile OutputFile
 # Then use the corresponding adaptive-arithmetic-decompress.py application to recreate the original input file.
 # Note that the application starts with a flat frequency table of 257 symbols (all set to a frequency of 1),
 # and updates it after each byte encoded. The corresponding decompressor program also starts with a flat
 # frequency table and updates it after each byte decoded. It is by design that the compressor and
 # decompressor have synchronized states, so that the data can be decompressed properly.
-# 
+#
 # Copyright (c) Project Nayuki
-# 
+#
 # https://www.nayuki.io/page/reference-arithmetic-coding
 # https://github.com/nayuki/Reference-arithmetic-coding
 #
- 
+
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import OneHotEncoder
 import keras
 from keras.models import Sequential
 from keras.models import model_from_json
-from keras.layers import Dense
-from keras.layers import LSTM, Flatten, CuDNNLSTM
-from keras.layers.embeddings import Embedding
 from keras.models import load_model
 from keras.layers.normalization import BatchNormalization
 import tensorflow as tf
@@ -67,11 +64,11 @@ def strided_app(a, L, S):  # Window len = L, Stride len/stepsize = S
 def predict_lstm(X, y, y_original, timesteps, bs, alphabet_size, model_name, final_step=False):
         model = getattr(models, model_name)(bs, timesteps, alphabet_size)
         model.load_weights(args.model_weights_file)
-        
+
         if not final_step:
                 num_iters = int((len(X)+timesteps)/bs)
                 ind = np.array(range(bs))*num_iters
-                
+
                 # open compressed files and compress first few characters using
                 # uniform distribution
                 f = [open(args.temp_file_prefix+'.'+str(i),'wb') for i in range(bs)]
@@ -79,7 +76,7 @@ def predict_lstm(X, y, y_original, timesteps, bs, alphabet_size, model_name, fin
                 enc = [arithmeticcoding_fast.ArithmeticEncoder(32, bitout[i]) for i in range(bs)]
                 prob = np.ones(alphabet_size)/alphabet_size
                 cumul = np.zeros(alphabet_size+1, dtype = np.uint64)
-                cumul[1:] = np.cumsum(prob*10000000 + 1)        
+                cumul[1:] = np.cumsum(prob*10000000 + 1)
                 for i in range(bs):
                         for j in range(min(timesteps, num_iters)):
                                 enc[i].write(cumul, X[ind[i],j])
@@ -94,14 +91,14 @@ def predict_lstm(X, y, y_original, timesteps, bs, alphabet_size, model_name, fin
                 for i in range(bs):
                         enc[i].finish()
                         bitout[i].close()
-                        f[i].close()            
+                        f[i].close()
         else:
                 f = open(args.temp_file_prefix+'.last','wb')
                 bitout = arithmeticcoding_fast.BitOutputStream(f)
                 enc = arithmeticcoding_fast.ArithmeticEncoder(32, bitout)
                 prob = np.ones(alphabet_size)/alphabet_size
                 cumul = np.zeros(alphabet_size+1, dtype = np.uint64)
-                cumul[1:] = np.cumsum(prob*10000000 + 1)        
+                cumul[1:] = np.cumsum(prob*10000000 + 1)
 
                 for j in range(timesteps):
                         enc.write(cumul, X[0,j])
@@ -138,8 +135,8 @@ def main():
 
         batch_size = args.batch_size
         timesteps = 64
-         
-        
+
+
         with open(args.params_file, 'r') as f:
                 params = json.load(f)
 
@@ -160,25 +157,25 @@ def main():
         Y = onehot_encoder.transform(Y_original)
 
         l = int(len(series)/batch_size)*batch_size
-        
+
         predict_lstm(X, Y, Y_original, timesteps, batch_size, alphabet_size, args.model_name)
         if l < len(series)-timesteps:
                 predict_lstm(X[l:,:], Y[l:,:], Y_original[l:], timesteps, 1, alphabet_size, args.model_name, final_step = True)
         else:
                 f = open(args.temp_file_prefix+'.last','wb')
                 bitout = arithmeticcoding_fast.BitOutputStream(f)
-                enc = arithmeticcoding_fast.ArithmeticEncoder(32, bitout) 
+                enc = arithmeticcoding_fast.ArithmeticEncoder(32, bitout)
                 prob = np.ones(alphabet_size)/alphabet_size
-                
+
                 cumul = np.zeros(alphabet_size+1, dtype = np.uint64)
-                cumul[1:] = np.cumsum(prob*10000000 + 1)        
+                cumul[1:] = np.cumsum(prob*10000000 + 1)
                 for j in range(l, len(series)):
                         enc.write(cumul, series[j])
                 enc.finish()
-                bitout.close() 
+                bitout.close()
                 f.close()
-        
-        
+
+
         # combine files into one file
         f = open(args.output_file_prefix+'.combined','wb')
         for i in range(batch_size):
@@ -197,7 +194,7 @@ def main():
         f.close()
         shutil.rmtree(args.temp_dir)
 
-                                        
+
 if __name__ == "__main__":
         main()
 

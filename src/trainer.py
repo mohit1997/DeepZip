@@ -1,8 +1,5 @@
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
-from keras.models import Sequential
-from keras.layers import Dense, Bidirectional
-from keras.layers import LSTM, Flatten, Conv1D, LocallyConnected1D, CuDNNLSTM, CuDNNGRU, MaxPooling1D, GlobalAveragePooling1D, GlobalMaxPooling1D
 from math import sqrt
 from keras.layers.embeddings import Embedding
 from keras.callbacks import ModelCheckpoint, EarlyStopping
@@ -25,9 +22,6 @@ parser = argparse.ArgumentParser()
 parser.add_argument('-d', action='store', default=None,
                     dest='data',
                     help='choose sequence file')
-parser.add_argument('-gpu', action='store', default="0",
-                    dest='gpu',
-                    help='choose gpu number')
 parser.add_argument('-name', action='store', default="model1",
                     dest='name',
                     help='weights will be stored with this name')
@@ -60,14 +54,14 @@ def generate_single_output_data(file_path,batch_size,time_steps):
         data = strided_app(series, time_steps+1, 1)
         l = int(len(data)/batch_size) * batch_size
 
-        data = data[:l] 
+        data = data[:l]
         X = data[:, :-1]
         Y = data[:, -1:]
-        
+
         Y = onehot_encoder.transform(Y)
         return X,Y
 
-        
+
 def fit_model(X, Y, bs, nb_epoch, model):
         y = Y
         optim = keras.optimizers.Adam(lr=1e-3, beta_1=0.9, beta_2=0.999, epsilon=1e-8, decay=0, amsgrad=False)
@@ -79,10 +73,10 @@ def fit_model(X, Y, bs, nb_epoch, model):
         callbacks_list = [checkpoint, csv_logger, early_stopping]
         #callbacks_list = [checkpoint, csv_logger]
         model.fit(X, y, epochs=nb_epoch, batch_size=bs, verbose=1, shuffle=True, callbacks=callbacks_list)
- 
 
-                
-                
+
+
+
 arguments = parser.parse_args()
 print(arguments)
 

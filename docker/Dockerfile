@@ -42,8 +42,8 @@ RUN conda install -y python=${python_version} && \
     pip install --upgrade pip && \
     pip install \
       sklearn_pandas \
-      tensorflow-gpu \
-      cntk-gpu && \
+      tensorflow \
+      cntk && \
     conda install \
       bcolz \
       h5py \
