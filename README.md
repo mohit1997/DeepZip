@@ -5,12 +5,14 @@ DNA_compression using neural networks
 
 
 ## Requirements
+0. GPU, nvidia-docker
 1. python 2/3
 2. numpy
 3. sklearn
 4. keras 2.2.2
 5. tensorflow (cpu/gpu) 1.8
 
+(nvidia-docker is currently required to run the code)
 A simple way to install and run is to use the docker files provided:
 
 ```bash
