@@ -160,9 +160,6 @@ def GRU_multi_16bit(bs,time_steps,alphabet_size):
         model.add(Dense(alphabet_size, activation='softmax'))
         return model
 
-
-
-
 def FC_4layer_16bit(bs,time_steps, alphabet_size):
         K.set_floatx('float16')
         model = Sequential()
@@ -218,4 +215,6 @@ def FC(bs,time_steps,alphabet_size):
         model.add(Dense(64, activation='relu', kernel_initializer=init))
         model.add(Dense(alphabet_size, activation='softmax'))
         return model
+
+# models for Siemens floating point data compression
 
