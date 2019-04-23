@@ -217,4 +217,9 @@ def FC(bs,time_steps,alphabet_size):
         return model
 
 # models for Siemens floating point data compression
-
+def FC_siemens_1hiddenlayer(input_dim,hidden_layer_size):
+    model = Sequential()
+    model.add(Dense(hidden_layer_size,activation='relu',input_dim=input_dim))
+    model.add(BatchNormalization())
+    model.add(Dense(1))
+    return model

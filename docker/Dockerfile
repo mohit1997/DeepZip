@@ -53,7 +53,6 @@ RUN conda install -y python=${python_version} && \
       nose \
       notebook \
       Pillow \
-      padasip \
       pandas \
       pydot \
       pygpu \
