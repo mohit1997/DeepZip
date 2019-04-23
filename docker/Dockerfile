@@ -5,6 +5,7 @@ FROM nvidia/cuda:${cuda_version}-cudnn${cudnn_version}-devel
 # Install system packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
       bzip2 \
+      p7zip-full \
       g++ \
       git \
       graphviz \
