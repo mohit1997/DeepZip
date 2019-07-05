@@ -19,12 +19,12 @@ tf.set_random_seed(42)
 np.random.seed(0)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-train', action='store', default=None,
-                    dest='train',
-                    help='choose training sequence file')
-parser.add_argument('-val', action='store', default=None,
-                    dest='val',
-                    help='choose validation sequence file')
+parser.add_argument('-d', action='store', default=None,
+                    dest='data',
+                    help='choose sequence file')
+parser.add_argument('-gpu', action='store', default="0",
+                    dest='gpu',
+                    help='choose gpu number')
 parser.add_argument('-name', action='store', default="model1",
                     dest='name',
                     help='weights will be stored with this name')
@@ -35,47 +35,59 @@ parser.add_argument('-log_file', action='store',
                     dest='log_file',
                     help='Log file')
 
+import keras.backend as K
+
+def loss_fn(y_true, y_pred):
+        return 1/np.log(2) * K.categorical_crossentropy(y_true, y_pred)
+
 def strided_app(a, L, S):  # Window len = L, Stride len/stepsize = S
         nrows = ((a.size - L) // S) + 1
         n = a.strides[0]
         return np.lib.stride_tricks.as_strided(a, shape=(nrows, L), strides=(S * n, n), writeable=False)
 
 
-def generate_data(file_path,time_steps):
+def generate_single_output_data(file_path,batch_size,time_steps):
         series = np.load(file_path)
         series = series.reshape(-1, 1)
+        onehot_encoder = OneHotEncoder(sparse=False)
+        onehot_encoded = onehot_encoder.fit(series)
 
         series = series.reshape(-1)
 
         data = strided_app(series, time_steps+1, 1)
+        l = int(len(data)/batch_size) * batch_size
 
+        data = data[:l] 
         X = data[:, :-1]
         Y = data[:, -1:]
         
+        Y = onehot_encoder.transform(Y)
         return X,Y
 
         
-def fit_model(X_train, Y_train, X_val, Y_val, nb_epoch, model):
-        model.compile(loss='mean_squared_error', optimizer='adam')
-        checkpoint = ModelCheckpoint(arguments.name, monitor='val_loss', verbose=1, save_best_only=True, mode='min', save_weights_only=False)
+def fit_model(X, Y, bs, nb_epoch, model):
+        y = Y
+        optim = keras.optimizers.Adam(lr=1e-3, beta_1=0.9, beta_2=0.999, epsilon=1e-8, decay=0, amsgrad=False)
+        model.compile(loss=loss_fn, optimizer=optim)
+        checkpoint = ModelCheckpoint(arguments.name, monitor='loss', verbose=1, save_best_only=True, mode='min', save_weights_only=True)
         csv_logger = CSVLogger(arguments.log_file, append=True, separator=';')
-        early_stopping = EarlyStopping(monitor='val_loss', mode='min', min_delta=0, patience=3, verbose=1)
+        early_stopping = EarlyStopping(monitor='loss', mode='min', min_delta=0.005, patience=3, verbose=1)
 
         callbacks_list = [checkpoint, csv_logger, early_stopping]
         #callbacks_list = [checkpoint, csv_logger]
-        model.fit(X_train, Y_train, epochs=nb_epoch, verbose=1, shuffle=True, callbacks=callbacks_list, validation_data = (X_val,Y_val))
+        model.fit(X, y, epochs=nb_epoch, batch_size=bs, verbose=1, shuffle=True, callbacks=callbacks_list)
  
- 
+
+                
+                
 arguments = parser.parse_args()
 print(arguments)
 
-sequence_length=4
-hidden_layer_size=10
+batch_size=128
+sequence_length=64
 num_epochs=20
 
-X_train,Y_train = generate_single_output_data(arguments.train, sequence_length)
-print(X_train)
-print(Y_train)
-X_val,Y_val = generate_single_output_data(arguments.val, sequence_length)
-model = getattr(models, arguments.model_name)(sequence_length,hidden_layer_size)
-fit_model(X_train, Y_train, X_val, Y_val, num_epochs, model)
+X,Y = generate_single_output_data(arguments.data,batch_size, sequence_length)
+print(Y.shape[1])
+model = getattr(models, arguments.model_name)(batch_size, sequence_length, Y.shape[1])
+fit_model(X, Y, batch_size,num_epochs , model)

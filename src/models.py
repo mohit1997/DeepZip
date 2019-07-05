@@ -2,7 +2,7 @@ from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
 from keras.models import Sequential
 from keras.layers import Dense, Bidirectional
-from keras.layers import LSTM, Flatten, Conv1D, LocallyConnected1D, LSTM, CuDNNGRU, MaxPooling1D, GlobalAveragePooling1D, GlobalMaxPooling1D
+from keras.layers import LSTM, Flatten, Conv1D, LocallyConnected1D, GRU, MaxPooling1D, GlobalAveragePooling1D, GlobalMaxPooling1D
 from math import sqrt
 from keras.layers.embeddings import Embedding
 from keras.callbacks import ModelCheckpoint
