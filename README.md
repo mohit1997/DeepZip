@@ -2,7 +2,7 @@
 
 ## Description
 DNA_compression using neural networks
-
+[DeepZip: Lossless Data Compression using Recurrent Neural Networks](https://arxiv.org/abs/1811.08162)
 
 ## Requirements
 0. GPU, nvidia-docker
@@ -39,4 +39,24 @@ cd data
 ```
 cd src
 ./run_experiments.sh biLSTM
+```
+### Please cite if you utilize the code in this repository.
+```
+
+@inproceedings{7fcb664b03ac4d6497048954d756b91f,
+title = "DeepZip: Lossless Data Compression Using Recurrent Neural Networks",
+author = "Mohit Goyal and Kedar Tatwawadi and Shubham Chandak and Idoia Ochoa",
+year = "2019",
+month = "5",
+day = "10",
+doi = "10.1109/DCC.2019.00087",
+language = "English (US)",
+series = "Data Compression Conference Proceedings",
+publisher = "Institute of Electrical and Electronics Engineers Inc.",
+editor = "Ali Bilgin and Storer, {James A.} and Marcellin, {Michael W.} and Joan Serra-Sagrista",
+booktitle = "Proceedings - DCC 2019",
+address = "United States",
+
+}
+
 ```
