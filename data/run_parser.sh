@@ -2,8 +2,8 @@
 data_dir="files_to_be_compressed"
 processed_dir="processed_files"
 
-
-for f in $data_dir
+mkdir -p $processed_dir
+for f in $data_dir/*
 do
     echo "filename: "$f
     s=${f##*/}
