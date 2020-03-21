@@ -6,7 +6,7 @@ DNA_compression using neural networks
 [DeepZip: Lossless Data Compression using Recurrent Neural Networks](https://arxiv.org/abs/1811.08162)
 
 ## Requirements
-0. GPU, nvidia-docker
+0. GPU, nvidia-docker (or try alternative installation)
 1. python 2/3
 2. numpy
 3. sklearn
