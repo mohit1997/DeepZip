@@ -48,8 +48,9 @@ cd data
 
 ```
 cd src
-./run_experiments.sh biLSTM
+./run_experiments.sh biLSTM GPUID
 ```
+Note: GPUID by default can be set to 0. The corresponding command would be then `./run_experiments.sh biLSTM 0`
 ### Please cite if you utilize the code in this repository.
 ```
 
