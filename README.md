@@ -21,6 +21,14 @@ cd docker
 make bash BACKEND=tensorflow DATA=/path/to/data/
 ```
 
+## Alternative Installation
+```bash
+cd DeepZip
+python3 -m venv tf
+source tf/bin/activate
+bash install.sh
+```
+
 ## Code
 To run a compression experiment: 
 
