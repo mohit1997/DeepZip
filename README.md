@@ -21,7 +21,7 @@ cd docker
 make bash BACKEND=tensorflow DATA=/path/to/data/
 ```
 
-## Alternative Installation
+## Alternative Installation (Docker not needed, skip the above steps)
 ```bash
 cd DeepZip
 python3 -m venv tf
