@@ -42,8 +42,8 @@ RUN conda install -y python=${python_version} && \
     pip install --upgrade pip && \
     pip install \
       sklearn_pandas \
-      tensorflow-gpu==1.13.1 \
-      keras==2.2.4 \
+      tensorflow-gpu==1.8.0 \
+      keras==2.2.2 \
       cntk-gpu && \
     conda install \
       bcolz \
