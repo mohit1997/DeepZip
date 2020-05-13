@@ -12,7 +12,7 @@ parser.add_argument('-output', action='store',dest='output_file_path',
                     help='output file path')
 args = parser.parse_args()
 
-with open(args.input_file_path) as fp:
+with open(args.input_file_path, 'rb') as fp:
     data = fp.read()
 
 print(len(data))
