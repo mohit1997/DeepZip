@@ -174,7 +174,7 @@ def main():
         if l < len_series:
                 series[l:] = predict_lstm(len_series - l, timesteps, 1, alphabet_size, args.model_name, final_step = True)
         
-        f = open(FLAGS.output,'wb')
+        f = open(args.output_file_name,'wb')
         print(id2char_dict)
         print(series[:10])
         f.write(bytearray([id2char_dict[str(s)] for s in series]))
