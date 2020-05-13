@@ -44,8 +44,7 @@ RUN conda install -y python=${python_version} && \
       sklearn_pandas \
       tensorflow-gpu==1.8.0 \
       keras==2.2.2 \
-      numpy==1.16.4 \
-      cntk-gpu && \
+      numpy==1.16.4 && \
     conda install \
       bcolz \
       h5py \
@@ -59,11 +58,8 @@ RUN conda install -y python=${python_version} && \
       pygpu \
       pyyaml \
       scikit-learn \
-      six \
-      theano && \
+      six && \
     conda clean -yt
-
-ADD theanorc /home/keras/.theanorc
 
 ENV PYTHONPATH='/src/:$PYTHONPATH'
 
