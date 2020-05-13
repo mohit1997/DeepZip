@@ -42,7 +42,8 @@ RUN conda install -y python=${python_version} && \
     pip install --upgrade pip && \
     pip install \
       sklearn_pandas \
-      tensorflow-gpu \
+      tensorflow-gpu==1.13.1 \
+      keras==2.2.4 \
       cntk-gpu && \
     conda install \
       bcolz \
@@ -59,8 +60,6 @@ RUN conda install -y python=${python_version} && \
       scikit-learn \
       six \
       theano && \
-    git clone git://github.com/keras-team/keras.git /src && pip install -e /src[tests] && \
-    pip install git+git://github.com/keras-team/keras.git && \
     conda clean -yt
 
 ADD theanorc /home/keras/.theanorc
