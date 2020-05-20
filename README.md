@@ -1,7 +1,7 @@
 # DeepZip
 
 ## Description
-DNA_compression using neural networks
+Data compression using neural networks
 
 [DeepZip: Lossless Data Compression using Recurrent Neural Networks](https://arxiv.org/abs/1811.08162)
 
