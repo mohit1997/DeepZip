@@ -1,24 +1,28 @@
-from sklearn.metrics import mean_squared_error
-from sklearn.preprocessing import MinMaxScaler
-from keras.models import Sequential
-from keras.layers import Dense, Bidirectional
-from keras.layers import LSTM, Flatten, Conv1D, LocallyConnected1D, CuDNNLSTM, CuDNNGRU, MaxPooling1D, GlobalAveragePooling1D, GlobalMaxPooling1D
-from math import sqrt
-from keras.layers.embeddings import Embedding
-from keras.callbacks import ModelCheckpoint, EarlyStopping
-# from matplotlib import pyplot
-import keras
-from sklearn.preprocessing import OneHotEncoder
-from keras.layers.normalization import BatchNormalization
 import tensorflow as tf
 import numpy as np
 import argparse
 import os
-from keras.callbacks import CSVLogger
+from tensorflow import keras
+from sklearn.metrics import mean_squared_error
+from sklearn.preprocessing import MinMaxScaler
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Bidirectional
+from tensorflow.keras.layers import LSTM, Flatten, Conv1D, LocallyConnected1D, MaxPooling1D, GlobalAveragePooling1D, GlobalMaxPooling1D
+from math import sqrt
+from tensorflow.keras.layers import Embedding
+from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping
+# from matplotlib import pyplot
+from sklearn.preprocessing import OneHotEncoder
+from tensorflow.keras.layers import BatchNormalization
+import tensorflow as tf
+import numpy as np
+import argparse
+import os
+from tensorflow.keras.callbacks import CSVLogger
 
 import models
 
-tf.set_random_seed(42)
+tf.random.set_seed(42)
 np.random.seed(0)
 
 parser = argparse.ArgumentParser()
@@ -38,7 +42,7 @@ parser.add_argument('-log_file', action='store',
                     dest='log_file',
                     help='Log file')
 
-import keras.backend as K
+import tensorflow.keras.backend as K
 
 def loss_fn(y_true, y_pred):
         return 1/np.log(2) * K.categorical_crossentropy(y_true, y_pred)
@@ -70,7 +74,7 @@ def generate_single_output_data(file_path,batch_size,time_steps):
         
 def fit_model(X, Y, bs, nb_epoch, model):
         y = Y
-        optim = keras.optimizers.Adam(lr=1e-3, beta_1=0.9, beta_2=0.999, epsilon=1e-8, decay=0, amsgrad=False)
+        optim = tf.keras.optimizers.Adam(lr=1e-3, beta_1=0.9, beta_2=0.999, epsilon=1e-8, decay=0, amsgrad=False)
         model.compile(loss=loss_fn, optimizer=optim)
         checkpoint = ModelCheckpoint(arguments.name, monitor='loss', verbose=1, save_best_only=True, mode='min', save_weights_only=True)
         csv_logger = CSVLogger(arguments.log_file, append=True, separator=';')
@@ -78,6 +82,9 @@ def fit_model(X, Y, bs, nb_epoch, model):
 
         callbacks_list = [checkpoint, csv_logger, early_stopping]
         #callbacks_list = [checkpoint, csv_logger]
+
+        print(X.dtype, y.dtype)
+
         model.fit(X, y, epochs=nb_epoch, batch_size=bs, verbose=1, shuffle=True, callbacks=callbacks_list)
  
 

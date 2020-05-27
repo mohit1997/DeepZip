@@ -17,14 +17,8 @@
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import OneHotEncoder
-import keras
-from keras.models import Sequential
-from keras.models import model_from_json
-from keras.layers import Dense
-from keras.layers import LSTM, Flatten, CuDNNLSTM
-from keras.layers.embeddings import Embedding
-from keras.models import load_model
-from keras.layers.normalization import BatchNormalization
+from tensorflow import keras
+from tensorflow.keras.models import load_model
 import tensorflow as tf
 import numpy as np
 import argparse
@@ -51,7 +45,7 @@ parser.add_argument('-input_file_prefix', action='store',dest='input_file_prefix
                     help='compressed file name')
 args = parser.parse_args()
 
-from keras import backend as K
+import tensorflow.keras.backend as K
 
 ### Input/output file names. TODO: use argparse for this
 #model_weights_file = 'model.h5'
@@ -77,7 +71,7 @@ def predict_lstm(len_series, timesteps, bs, alphabet_size, model_name, final_ste
         model.load_weights(args.model_weights_file)
         
         if not final_step:
-                num_iters = int((len_series)/bs)
+                num_iters = (len_series) // bs
                 series_2d = np.zeros((bs,num_iters), dtype = np.uint8)
                 # open compressed files and decompress first few characters using
                 # uniform distribution
@@ -140,7 +134,7 @@ def var_int_decode(f):
 def main():
         args.temp_dir = tempfile.mkdtemp()
         args.temp_file_prefix = args.temp_dir + "/compressed"
-        tf.set_random_seed(42)
+        tf.random.set_seed(42)
         np.random.seed(0)
         f = open(args.input_file_prefix+'.params','r')
         param_dict = json.loads(f.read())

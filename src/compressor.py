@@ -17,14 +17,8 @@
 from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import OneHotEncoder
-import keras
-from keras.models import Sequential
-from keras.models import model_from_json
-from keras.layers import Dense
-from keras.layers import LSTM, Flatten, CuDNNLSTM
-from keras.layers.embeddings import Embedding
-from keras.models import load_model
-from keras.layers.normalization import BatchNormalization
+from tensorflow import keras
+from tensorflow.keras.models import load_model
 import tensorflow as tf
 import numpy as np
 import argparse
@@ -52,7 +46,7 @@ parser.add_argument('-output', action='store',dest='output_file_prefix',
                     help='compressed file name')
 
 args = parser.parse_args()
-from keras import backend as K
+import tensorflow.keras.backend as K
 
 
 
@@ -69,9 +63,8 @@ def predict_lstm(X, y, y_original, timesteps, bs, alphabet_size, model_name, fin
         model.load_weights(args.model_weights_file)
         
         if not final_step:
-                num_iters = int((len(X)+timesteps)/bs)
+                num_iters = (len(X)+timesteps) // bs
                 ind = np.array(range(bs))*num_iters
-                
                 # open compressed files and compress first few characters using
                 # uniform distribution
                 f = [open(args.temp_file_prefix+'.'+str(i),'wb') for i in range(bs)]
@@ -129,7 +122,7 @@ def var_int_encode(byte_str_len, f):
 def main():
         args.temp_dir = tempfile.mkdtemp()
         args.temp_file_prefix = args.temp_dir + "/compressed"
-        tf.set_random_seed(42)
+        tf.random.set_seed(42)
         np.random.seed(0)
         series = np.load(args.sequence_npy_file)
         series = series.reshape(-1, 1)
