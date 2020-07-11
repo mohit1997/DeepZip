@@ -8,7 +8,7 @@ This branch is the non-GPU implementation of deepzip.
 The code has been tested on macOS Mojave. Please file an issue if there are problems.
 
 ## Requirements
-1. python 2/3
+1. python 3 (tested with 3.6)
 2. numpy
 3. sklearn
 4. keras 2.2.2
