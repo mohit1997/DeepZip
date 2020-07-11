@@ -23,7 +23,7 @@ make bash BACKEND=tensorflow DATA=/path/to/data/
 
 ## Alternative Installation (Docker not needed, skip the above steps)
 ```bash
-git clone https://github.com/mohit1997/DeepZip.git
+git clone --single-branch --branch noGPU https://github.com/mohit1997/DeepZip.git
 cd DeepZip
 python3 -m venv tf
 source tf/bin/activate
