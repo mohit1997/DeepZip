@@ -1,5 +1,7 @@
 # DeepZip
 
+<em>Update: Please checkout our new work [DZip](https://github.com/mohit1997/Dzip-torch) presented at DCC 2021.</em>
+
 ## Description
 Data compression using neural networks
 
